@@ -1,4 +1,4 @@
-# rp2059-15
+# RP 2059-15
 Public CD of SMPTE RP 2059-15
 
 [GitHub issues](https://github.com/SMPTE/rp2059-15/issues) are preferred for discussion of this specification. Alternatively, comments can be sent to 32nf-chair@lists.smpte.org.
