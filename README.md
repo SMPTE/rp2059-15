@@ -1,6 +1,8 @@
 # RP 2059-15
 Public CD of SMPTE RP 2059-15
 
+Public Committee Draft 2 was approved and posted on November 12 2021
+
 [GitHub issues](https://github.com/SMPTE/rp2059-15/issues) are preferred for discussion of this specification. Alternatively, comments can be sent to 32nf-chair@smpte.org.
 
 A questionnaire on the proposed model is available [here](https://www.surveymonkey.com/r/29GGT87). Feedback is encouraged and welcomed.
