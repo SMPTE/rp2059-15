@@ -1,0 +1,231 @@
+module: rp-2059-15-202x-PCD2
+  +--rw ptp
+  |  +--rw instance-list* [instance-number]
+  |  |  +--rw instance-number              uint32
+  |  |  +--rw default-ds
+  |  |  |  +--rw instance-type?     instance-type-enumeration
+  |  |  |  +--rw instance-enable?   boolean
+  |  |  |  +--ro clock-identity?    clock-identity-type
+  |  |  |  +--rw number-ports?      uint16
+  |  |  |  +--rw clock-quality
+  |  |  |  |  +--rw clock-class?                  uint8
+  |  |  |  |  +--rw clock-accuracy?               uint8
+  |  |  |  |  +--rw offset-scaled-log-variance?   uint16
+  |  |  |  +--rw priority1?         uint8
+  |  |  |  +--rw priority2?         uint8
+  |  |  |  +--rw domain-number?     uint8
+  |  |  |  +--rw sdo-id?            uint16
+  |  |  |  +--rw slave-only?        boolean
+  |  |  |  +--rw current-time
+  |  |  |  |  +--rw seconds-field?       uint64
+  |  |  |  |  +--rw nanoseconds-field?   uint32
+  |  |  |  x--rw two-step-flag?     boolean
+  |  |  +--rw current-ds
+  |  |  |  +--rw steps-removed?        uint16
+  |  |  |  +--rw offset-from-master?   time-interval-type
+  |  |  |  +--rw mean-delay?           time-interval-type
+  |  |  |  x--rw mean-path-delay?      time-interval-type
+  |  |  +--rw parent-ds
+  |  |  |  +--rw parent-port-identity
+  |  |  |  |  +--rw clock-identity?   clock-identity-type
+  |  |  |  |  +--rw port-number?      uint16
+  |  |  |  +--rw parent-stats?                                 boolean
+  |  |  |  +--rw observed-parent-offset-scaled-log-variance?   uint16
+  |  |  |  +--rw observed-parent-clock-phase-change-rate?      int32
+  |  |  |  +--rw grandmaster-identity?                         clock-identity-type
+  |  |  |  +--rw grandmaster-clock-quality
+  |  |  |  |  +--rw clock-class?                  uint8
+  |  |  |  |  +--rw clock-accuracy?               uint8
+  |  |  |  |  +--rw offset-scaled-log-variance?   uint16
+  |  |  |  +--rw grandmaster-priority1?                        uint8
+  |  |  |  +--rw grandmaster-priority2?                        uint8
+  |  |  |  +--rw protocol-address
+  |  |  |     +--rw network-protocol?   identityref
+  |  |  |     +--rw address-length?     uint16
+  |  |  |     +--rw address-field?      binary
+  |  |  +--rw time-properties-ds
+  |  |  |  +--rw current-utc-offset-valid?   boolean
+  |  |  |  +--rw current-utc-offset?         int16
+  |  |  |  +--rw leap59?                     boolean
+  |  |  |  +--rw leap61?                     boolean
+  |  |  |  +--rw time-traceable?             boolean
+  |  |  |  +--rw frequency-traceable?        boolean
+  |  |  |  +--rw ptp-timescale?              boolean
+  |  |  |  +--rw time-source?                identityref
+  |  |  +--rw fault-log-ds {fault-log}?
+  |  |  |  +--ro number-of-fault-records?   uint16
+  |  |  |  +--rw fault-record-list* [index]
+  |  |  |  |  +--rw index          uint16
+  |  |  |  |  +--rw time
+  |  |  |  |  |  +--rw seconds-field?       uint64
+  |  |  |  |  |  +--rw nanoseconds-field?   uint32
+  |  |  |  |  +--rw severity?      fault-severity-enumeration
+  |  |  |  |  +--rw name?          string
+  |  |  |  |  +--rw value?         string
+  |  |  |  |  +--rw description?   string
+  |  |  |  +--rw reset?                     boolean
+  |  |  +--rw performance-monitoring-ds {performance-monitoring}?
+  |  |  |  +--rw enable?        boolean
+  |  |  |  +--ro record-list* [index]
+  |  |  |     +--ro index                         uint16
+  |  |  |     +--ro measurement-valid?            boolean
+  |  |  |     +--ro period-complete?              boolean
+  |  |  |     +--ro pm-time?                      yang:timestamp
+  |  |  |     +--ro average-master-slave-delay?   time-interval-type
+  |  |  |     +--ro minimum-master-slave-delay?   time-interval-type
+  |  |  |     +--ro maximum-master-slave-delay?   time-interval-type
+  |  |  |     +--ro stddev-master-slave-delay?    time-interval-type
+  |  |  |     +--ro average-slave-master-delay?   time-interval-type
+  |  |  |     +--ro minimum-slave-master-delay?   time-interval-type
+  |  |  |     +--ro maximum-slave-master-delay?   time-interval-type
+  |  |  |     +--ro stddev-slave-master-delay?    time-interval-type
+  |  |  |     +--ro average-mean-path-delay?      time-interval-type
+  |  |  |     +--ro minimum-mean-path-delay?      time-interval-type
+  |  |  |     +--ro maximum-mean-path-delay?      time-interval-type
+  |  |  |     +--ro stddev-mean-path-delay?       time-interval-type
+  |  |  |     +--ro average-offset-from-master?   time-interval-type
+  |  |  |     +--ro minimum-offset-from-master?   time-interval-type
+  |  |  |     +--ro maximum-offset-from-master?   time-interval-type
+  |  |  |     +--ro stddev-offset-from-master?    time-interval-type
+  |  |  +--rw port-ds-list* [port-number]
+  |  |     +--rw port-number                       uint16
+  |  |     +--rw port-state?                       port-state-enumeration
+  |  |     +--rw underlying-interface?             if:interface-ref
+  |  |     +--rw port-enable?                      boolean
+  |  |     +--rw log-min-delay-req-interval?       int8
+  |  |     +--rw mean-link-delay?                  time-interval-type
+  |  |     x--rw peer-mean-path-delay?             time-interval-type
+  |  |     +--rw log-announce-interval?            int8
+  |  |     +--rw announce-receipt-timeout?         uint8
+  |  |     +--rw log-sync-interval?                int8
+  |  |     +--rw delay-mechanism?                  delay-mechanism-enumeration
+  |  |     +--rw log-min-pdelay-req-interval?      int8
+  |  |     +--rw version-number?                   uint8
+  |  |     +--rw minor-version-number?             uint8
+  |  |     +--rw delay-asymmetry?                  time-interval-type
+  |  |     +--rw master-only?                      boolean
+  |  |     +--rw description-port-ds
+  |  |     |  +--rw profile-identifier?   binary
+  |  |     |  +--rw protocol-address
+  |  |     |     +--rw network-protocol?   identityref
+  |  |     |     +--rw address-length?     uint16
+  |  |     |     +--rw address-field?      binary
+  |  |     +--rw unicast-negotiation-port-ds {unicast-negotiation}?
+  |  |     |  +--rw enable?   boolean
+  |  |     +--rw unicast-discovery-port-ds {unicast-discovery}?
+  |  |     |  +--ro max-table-size?       uint16
+  |  |     |  +--rw log-query-interval?   int8
+  |  |     |  +--rw port-address* [index]
+  |  |     |     +--rw index               uint16
+  |  |     |     +--rw network-protocol?   identityref
+  |  |     |     +--rw address-length?     uint16
+  |  |     |     +--rw address-field?      binary
+  |  |     +--rw performance-monitoring-port-ds {performance-monitoring}?
+  |  |        +--ro record-list* [index]
+  |  |           +--ro index                  uint16
+  |  |           +--ro pm-time?               yang:timestamp
+  |  |           +--ro announce-tx?           yang:zero-based-counter32
+  |  |           +--ro announce-rx?           yang:zero-based-counter32
+  |  |           +--ro announce-foreign-rx?   yang:zero-based-counter32
+  |  |           +--ro sync-tx?               yang:zero-based-counter32
+  |  |           +--ro sync-rx?               yang:zero-based-counter32
+  |  |           +--ro follow-up-tx?          yang:zero-based-counter32
+  |  |           +--ro follow-up-rx?          yang:zero-based-counter32
+  |  |           +--ro delay-req-tx?          yang:zero-based-counter32
+  |  |           +--ro delay-req-rx?          yang:zero-based-counter32
+  |  |           +--ro delay-resp-tx?         yang:zero-based-counter32
+  |  |           +--ro delay-resp-rx?         yang:zero-based-counter32
+  |  x--rw transparent-clock-default-ds
+  |  |  x--ro clock-identity?    clock-identity-type
+  |  |  x--rw number-ports?      uint16
+  |  |  x--rw delay-mechanism?   delay-mechanism-enumeration
+  |  |  x--rw primary-domain?    uint8
+  |  x--rw transparent-clock-port-ds-list* [port-number]
+  |     x--rw port-number                    uint16
+  |     x--rw log-min-pdelay-req-interval?   int8
+  |     x--rw faulty-flag?                   boolean
+  |     x--rw peer-mean-path-delay?          time-interval-type
+  +--rw gnss {gnss}?
+  |  +--rw gnss-instance-list* [gnss-instance-number]
+  |     +--rw gnss-instance-number            uint8
+  |     +--rw sky-object-ds
+  |     |  +--ro device-description?   string
+  |     |  +--ro time?                 string
+  |     |  +--ro satellite-list* [satellite]
+  |     |     +--ro satellite      uint8
+  |     |     +--ro gnssid?        gnssid-enumeration
+  |     |     +--ro svid?          uint8
+  |     |     +--ro sigid?         uint8
+  |     |     +--ro ss?            uint8
+  |     |     +--ro used?          boolean
+  |     |     +--ro iodl?          boolean
+  |     |     +--ro health?        uint8
+  |     |     +--ro cnr?           uint8
+  |     |     +--ro health-en?     boolean
+  |     |     +--ro new-data?      boolean
+  |     |     +--ro los-warning?   boolean
+  |     +--rw satellite-receiver-status-ds
+  |     |  +--ro satellite-receiver-status?   satellite-receiver-status-enumeration
+  |     |  +--rw instance-list* [instance-number]
+  |     |     +--rw instance-number               uint8
+  |     |     +--ro gnssid?                       gnssid-enumeration
+  |     |     +--rw satellite-vehicles-in-view?   uint16
+  |     |     +--rw satellite-vehicles-in-fix?    uint16
+  |     +--rw tvp-object-ds
+  |     |  +--ro latitude?    decimal64
+  |     |  +--ro longitude?   decimal64
+  |     |  +--ro altitude?    decimal64
+  |     +--rw osc-object-ds
+  |     |  +--ro running?       boolean
+  |     |  +--ro ref-pps?       boolean
+  |     |  +--ro disciplined?   boolean
+  |     |  +--ro delta-time?    int32
+  |     +--rw antenna-status-ds
+  |        +--ro antenna-status?          antenna-status-enumeration
+  |        +--ro backup-antenna-faulty?   boolean
+  +--rw ptp-smpte {ptp-smpte}?
+  |  +--rw instance-list* [instance-number]
+  |     +--rw instance-number                       uint32
+  |     +--ro variance-measurement-sample-period?   uint8
+  |     +--ro smpte-communication-model?            smpte-communication-model-enumeration
+  |     +--rw smpte-timecode-ds
+  |     |  +--ro default-system-frame-rate-numerator?           int32
+  |     |  +--ro default-system-frame-rate-denominator?         int32
+  |     |  +--ro master-locking-status?                         master-locking-status-enumeration
+  |     |  +--ro drop-frame-flag?                               boolean
+  |     |  +--ro color-frame-flag?                              boolean
+  |     |  +--ro current-local-offset?                          int32
+  |     |  +--ro jump-seconds?                                  int32
+  |     |  +--ro time-of-next-jump?                             uint64
+  |     |  +--ro time-of-next-jam?                              uint64
+  |     |  +--ro time-of-previous-jam?                          uint64
+  |     |  +--ro previous-jam-local-offset?                     int32
+  |     |  +--ro current-daylight-saving?                       boolean
+  |     |  +--ro daylight-saving-at-next-discontinuity?         boolean
+  |     |  +--ro daylight-saving-at-previous-daily-jam-event?   boolean
+  |     |  +--ro leap-second-jump?                              leap-second-jump-enumeration
+  |     +--ro management-message-tx?                yang:zero-based-counter32
+  |     +--ro management-message-rx?                yang:zero-based-counter32
+  |     +--rw leader-follower-delay?                time-interval-type
+  |     +--rw follower-leader-delay?                time-interval-type
+  +--rw grandmaster {grandmaster}?
+  |  +--rw gm-instance-list* [gm-instance-number]
+  |     +--rw gm-instance-number    uint8
+  |     +--ro gm-lock-state?        gm-lock-state-enumeration
+  |     +--ro gnss-status?          gnss-status-enumeration
+  |     +--rw instance-list* [instance-number]
+  |     |  +--rw instance-number                           uint8
+  |     |  +--rw gnss-instance-number?                     uint8
+  |     |  +--ro gm-current-ext-reference-source?          identityref
+  |     |  +--ro gm-current-ext-reference-source-status?   gm-ext-reference-source-status-enumeration
+  |     +--ro gm-holdover-status?   boolean
+  +--rw rfc-8173 {rfc-8173}?
+     +--rw instance-list* [instance-number]
+        +--rw instance-number                                uint32
+        +--ro ptp-base-clock-port-num-of-associated-ports?   uint32
+        +--ro ptp-base-clock-running-packets-sent?           yang:zero-based-counter64
+        +--ro ptp-base-clock-running-packets-received?       yang:zero-based-counter64
+        +--ro ptp-base-clock-port-associate-in-errors?       yang:zero-based-counter64
+        +--ro ptp-base-clock-port-associate-out-errors?      yang:zero-based-counter64
+        +--ro ptp-clock-profile-type?                        ptp-clock-profile-type-enumeration
+        +--ro ptp-clock-state?                               ptp-clock-state-enumeration
