@@ -1,0 +1,6345 @@
+module rp-2059-15-202x-PCD2 {
+
+  yang-version 1.1;
+
+  namespace "urn:example:smpte:yang:rp-2059-15-202x";
+
+  prefix "ptp";
+
+  import ietf-yang-types {
+
+    prefix yang;
+
+  }
+
+  import ietf-interfaces {
+
+    prefix if;
+
+  }
+
+  organization "Society of Motion Picture and Television Engineers (SMPTE)";
+
+  contact
+
+    "Director of Standards Development
+     SMPTE
+     White Plains Plaza
+     445 Hamilton Avenue
+     White Plains NY 10601-1827
+     USA
+     
+     Email: eng@smpte.org";
+
+  description
+
+     "This YANG module defines a data model for the
+    
+     Society of Motion Picture and Television Engineers (SMPTE)
+    
+     Recommended Practice RP 2059-15:2020 YANG Data Model for ST 2059-2 PTP
+     
+     Device Monitoring in Professional Broadcast applications";
+     
+
+  revision "2021-09-07" {
+      
+  description
+      
+     "The module has the following structure:
+     
+     (1) Container ptp: is designed to be compatible with a future IEEE
+     
+     data model for IEEE 1588-2019 for the configuration and state of
+     
+     IEEE Std 1588 clocks.  IEEE Std 1588 specifies the Precision Time
+     
+     Protocol (PTP). The nodes in this container are in turn designed to
+     
+     compliment with ietf-ptp.yang, as specified in RFC 8575: YANG Data Model
+     
+     for IEEE 1588-2008.
+     
+     
+     (2) Container gnss: defines a data set for the monitoring of parameters
+     
+     associated with the Global Navigation Satellite System (GNSS).
+     
+     
+     (3) Container ptp-smpte: defines a data set for the monitoring of
+     
+     parameters in the ST 2059-2 PTP Profile associated with
+     
+     (a) The SMPTE PTP communication Model
+     
+     (b) The Variance measurement sample period, and
+     
+     (c) The synthesis of SMPTE Time-of-Day Timecode from PTP.
+     
+     
+     (4) Container grandmaster: defines a data set for the monitoring of
+     
+     parameters associated with a PTP Grandmaster designed for Professional
+     
+     Broadcast Applications.
+     
+     
+     (5) Container rfc-8173:  defines a data set of parameters selected from
+     
+     IETF RFC 8173 Precision Time Protocol Version 2 (PTPv2) Management Information
+     
+     Base.";
+      
+      reference
+      
+        "SMPTE RP 2059-15:202x YANG Data Model for ST 2059-2 PTP Device Monitoring
+        
+        in Professional Broadcast Applications.";
+  }
+
+
+  feature fault-log {
+    description
+      "Logging of faults detected in the PTP Instance.";
+    reference
+      "8.2.6 of IEEE Std 1588-2019";
+  }
+
+
+  feature unicast-negotiation {
+  description
+      "Unicast negotiation conducted through use of TLVs.";
+  reference
+      "16.1 of IEEE Std 1588-2019";
+  }
+  
+  
+  feature unicast-discovery {
+
+    description
+
+      "Mechanism for PTP to be used over a network that does not 
+
+       provide multicast. A PTP Instance is configured with the 
+
+       addresses of PTP Ports of other PTP Instances with which
+
+       it should attempt to establish unicast communication. 
+
+       The PTP Instance may request that these PTP Ports transmit 
+
+       unicast Announce, Sync, and Delay_Resp messages to it.";
+
+    reference
+
+      "17.4 of IEEE Std 1588-2019";
+
+  }  
+
+
+  feature performance-monitoring {
+
+    description
+
+      "Collection of performance monitoring logs that can be
+
+       read using management.";
+
+    reference
+
+      "Annex J of IEEE Std 1588-2019";
+
+  }
+
+
+  feature gnss {
+  	
+  	 description
+  	  	  	
+  	"collection of parameters associated with the
+  	
+  	status of GNSS Antenna, and satellite lock";  	
+  	
+  }
+
+
+  feature ptp-smpte {
+  	
+  	 description
+  
+     "Parameters in ST 2059-2 associated with
+     
+     (a) The SMPTE PTP Communication Model
+     
+     (b) The Variance Measurement sample period,
+     
+     (c) The synthesis of SMPTE Time-of-Day Timecode from PTP
+     
+     (d) Management TLV message counters, and
+     
+     (e) Current leader<>follower delays";
+  
+     reference
+     
+       "SMPTE ST 2059-2:2015 5.5.3, 5.10, 5.13";
+  
+  }
+ 
+
+  feature grandmaster {
+  	
+  	 description
+  	
+  	 "Parameters associated with the status of
+  	 
+  	 a device designed to be a Grandmaster";
+  	
+  }
+
+
+  feature rfc-8173 {
+  	
+  	 description
+  	 
+  	 "Monitoring of selected parameters from IETF RFC 8173";
+  	
+  }
+
+  identity network-protocol-id {
+      description
+        "Enumeration for the protocol used by a PTP Instance to
+        transport PTP messages.
+        YANG identity is used so that a PTP Profile's YANG augment
+        can assign values, using numeric range F000 to FFFD hex.";
+      reference
+        "7.4.1 of IEEE Std 1588-2019";
+  }
+    identity udp-ipv4 {
+      base network-protocol-id;
+      description
+        "UDP on IPv4. Numeric value is 0001 hex.";
+    }
+    identity udp-ipv6 {
+      base network-protocol-id;
+      description
+        "UDP on IPv6. Numeric value is 0002 hex.";
+    }
+    identity ieee802-3 {
+      base network-protocol-id;
+      description
+        "IEEE Std 802.3 (Ethernet). Numeric value is 0003 hex.";
+    }
+    identity devicenet {
+      base network-protocol-id;
+      description
+        "DeviceNet. Numeric value is 0004 hex.";
+    }
+    identity controlnet {
+      base network-protocol-id;
+      description
+        "ControlNet. Numeric value is 0005 hex.";
+    }
+    identity profinet {
+      base network-protocol-id;
+      description
+        "PROFINET. Numeric value is 0006 hex.";
+    }
+    identity otn {
+      base network-protocol-id;
+      description
+        "Optical Transport Network (OTN). Numeric value
+        is 0007 hex.";
+    }
+    identity unknown {
+      base network-protocol-id;
+      description
+        "Unknown. Numeric value is FFFE hex.";
+    }
+
+  identity time-source-id {
+    description
+      "Enumeration for the source of time used by the Grandmaster
+      PTP Instance.
+      YANG identity is used so that a PTP Profile's YANG augment
+      can assign values, using numeric range F0 to FE hex.";
+    reference
+      "7.6.2.8 of IEEE Std 1588-2019";
+  }
+    identity atomic-clock {
+      base time-source-id;
+      description
+        "Any PTP Instance that is based on an atomic resonance
+        for frequency, or a PTP Instance directly connected
+        to a device that is based on an atomic resonance for
+        frequency. Numeric value is 10 hex.";
+    }
+    identity gnss {
+      base time-source-id;
+      description
+        "Any PTP Instance synchronized to a satellite system that
+        distributes time and frequency. Numeric value is 20 hex.";
+    }
+    identity terrestrial-radio {
+      base time-source-id;
+      description
+        "Any PTP Instance synchronized via any of the radio
+        distribution systems that distribute time and frequency.
+        Numeric value is 30 hex.";
+    }
+    identity serial-time-code {
+      base time-source-id;
+      description
+        "Any PTP Instance synchronized via any of the serial
+        time code distribution systems that distribute time
+        and frequency, for example, IRIG-B.
+        Numeric value is 39 hex.";
+    }
+    identity ptp {
+      base time-source-id;
+      description
+        "Any PTP Instance synchronized to a PTP-based source
+        of time external to the domain. Numeric value is 40 hex.";
+    }
+    identity ntp {
+      base time-source-id;
+      description
+        "Any PTP Instance synchronized via NTP or Simple Network
+        Time Protocol (SNTP) servers that distribute time and
+        frequency. Numeric value is 50 hex.";
+    }
+    identity hand-set {
+      base time-source-id;
+      description
+        "Used for any PTP Instance whose time has been set by
+        means of a human interface based on observation of a
+        source of time to within the claimed clock accuracy.
+        Numeric value is 60 hex.";
+    }
+    identity other {
+      base time-source-id;
+      description
+        "Other source of time and/or frequency not covered by
+        other values. Numeric value is 90 hex.";
+    }
+    identity internal-oscillator {
+      base time-source-id;
+      description
+        "Any PTP Instance whose frequency is not based on atomic
+        resonance, and whose time is based on a free-running
+        oscillator with epoch determined in an arbitrary or
+        unknown manner. Numeric value is A0 hex.";
+    }
+
+  identity smpte-time-source-id {
+    description
+      "Enumeration for the source of time used by the Grandmaster
+      PTP Instance.
+      YANG identity is used so that a PTP Profile's YANG augment
+      can assign values, using numeric range F0 to FE hex.
+      Default identity is internal-oscillator Numeric value A0 hex.";
+    reference
+      "7.6.2.8 of IEEE Std 1588-2019";
+  }
+    identity ext-atomic-clock {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance that is based on an atomic resonance
+        for frequency, or a PTP Instance directly connected
+        to a device that is based on an atomic resonance for
+        frequency. Numeric value is 10 hex.";
+    }
+    identity ext-gnss {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance synchronized to a satellite system that
+        distributes time and frequency. Numeric value is 20 hex.";
+    }
+    identity ext-terrestrial-radio {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance synchronized via any of the radio
+        distribution systems that distribute time and frequency.
+        Numeric value is 30 hex.";
+    }
+    identity ext-serial-time-code {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance synchronized via any of the serial
+        time code distribution systems that distribute time
+        and frequency, for example, IRIG-B.
+        Numeric value is 39 hex.";
+    }
+    identity ext-ptp {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance synchronized to a PTP-based source
+        of time external to the domain. Numeric value is 40 hex.";
+    }
+    identity ext-ntp {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance synchronized via NTP or Simple Network
+        Time Protocol (SNTP) servers that distribute time and
+        frequency. Numeric value is 50 hex.";
+    }
+    identity ext-hand-set {
+      base smpte-time-source-id;
+      description
+        "Used for any PTP Instance whose time has been set by
+        means of a human interface based on observation of a
+        source of time to within the claimed clock accuracy.
+        Numeric value is 60 hex.";
+    }
+    identity ext-other {
+      base smpte-time-source-id;
+      description
+        "Other source of time and/or frequency not covered by
+        other values. Numeric value is 90 hex.";
+    }
+    identity ext-internal-oscillator {
+      base smpte-time-source-id;
+      description
+        "Any PTP Instance whose frequency is not based on atomic
+        resonance, and whose time is based on a free-running
+        oscillator with epoch determined in an arbitrary or
+        unknown manner. Numeric value is A0 hex.";
+    }
+    identity ext-syncs {
+    	 base smpte-time-source-id;
+    	 description
+    	  "Any PTP Instance synchronized via a source of
+    	  analog television syncs either Black and Burst, or
+    	  Tri-level sync. Numeric value is F0 hex.";
+    }
+    identity ext-audio-wordclock {
+    	 base smpte-time-source-id;
+    	 description
+    	  "Any PPT Instance whose frequency is not based on atomic
+    	  resonance, and whose time is synchronised via any of
+    	  the audo wordclock distribition systems eg an AES 11 digital
+    	  audio reference signal (DARS). Numeric value is F1 hex."; 
+    }
+    identity ext-smpte-time-code {
+    	 base smpte-time-source-id;
+    	 description
+    	  "Any PTP Instance synchronized via any of the serial
+        time code distribution systems that distribute time
+        and frequency via SMPTE ST 12 timecode.
+        Numeric value is F2 hex.";
+       reference
+        "ST 12-1:2014 SMPTE Standard - Time and Control Code";
+    }
+    identity ext-pps {
+    	 base smpte-time-source-id;
+    	 description
+    	   "Any PTP Instance synchronized via any pulse distribution
+    	   system that distributes Pulse Per Second (PPS) pulses.
+    	   Numeric value is F3 hex.";
+    }
+    
+  typedef delay-mechanism-enumeration {
+
+    type enumeration {
+
+      enum e2e {
+
+        value 1;
+
+        description
+
+          "The PTP Port is configured to use the delay
+
+           request-response mechanism.";
+
+      }
+
+      enum p2p {
+
+        value 2;
+
+        description
+
+          "The PTP Port is configured to use the peer-to-peer
+
+           delay mechanism.";
+
+      }
+
+      enum disabled {
+
+        value 254;
+
+        description
+
+          "The PTP Port does not implement the delay mechanism.
+
+           This value shall not be used except when the applicable
+
+           PTP Profile specifies either:
+
+           1) that the PTP Instance only supports frequency 
+
+           transfer (syntonization) and that neither path delay 
+
+           mechanism is to be used or
+
+           2) that the PTP Instance participates in time transfer
+
+           but the system accuracy requirements are such that, 
+
+           for a segment of the system path, delays can be neglected
+
+           allowing PTP Instances in that portion of the PTP Network
+
+           to use the disabled value.";
+
+      }
+
+      enum common_p2p {
+
+        value 3;
+
+        description
+
+          "The PTP Port is configured to use the Common Mean Link 
+
+           Delay Service option.";
+
+      }
+
+      enum special {
+
+        value 4;
+
+        description
+
+          "Special Ports do not use either delay mechanism.";
+
+      }
+
+    }
+
+    description
+
+      "Enumeration for the path delay measuring mechanism.
+
+       Values for this enumeration are specified by the IEEE 1588
+
+       standard exclusively.";
+
+    reference
+
+      "7.5.3 of IEEE Std 1588-2019
+      8.2.15.4.4 of IEEE Std 1588-2019";
+
+  }
+  
+
+  typedef port-state-enumeration {
+
+    type enumeration {
+
+      enum initializing {
+
+        value 1;
+
+        description
+
+          "The PTP Port is initializing its data sets, hardware, and
+
+           communication facilities. The PTP Port shall not place any
+
+           PTP messages on its communication path.";
+
+      }
+
+      enum faulty {
+
+        value 2;
+
+        description
+
+          "The fault state of the protocol. Except for PTP management
+
+          messages that are a required response to a PTP message
+
+          received from the applicable management mechanism, 
+
+          a PTP Port in this state shall not transmit any PTP related
+
+          messages. In a Boundary Clock, no activity on a faulty
+
+          PTP Port shall affect the other PTP Ports of the
+
+          PTP Instance. If fault activity on a PTP Port in this state
+
+          cannot be confined to the faulty PTP Port, then all
+
+          PTP Ports shall be in the faulty state.";
+
+      }
+
+      enum disabled {
+
+        value 3;
+
+        description
+
+          "The PTP Port is disabled. Except for PTP management
+
+          messages that are a required response to a PTP message
+
+          received from the applicable management mechanism, 
+
+          a PTP Port in this state shall not transmit any PTP related
+
+          messages. In a Boundary Clock, no activity at the PTP Port
+
+          shall be allowed to affect the activity at any other
+
+          PTP Port of the Boundary Clock. A PTP Port in this state
+
+          shall discard all received PTP messages except for PTP
+
+          management messages.";
+
+      }
+
+      enum listening {
+
+        value 4;
+
+        description
+
+          "The PTP Port is waiting for the announce-receipt-timeout
+
+           to expire or to receive an Announce message from a
+
+           Master PTP Instance. The purpose of this state is to allow
+
+           orderly addition of PTP Instances to a domain
+
+           (i.e. to know if this PTP Port is truly the Grandmaster
+
+           Clock prior to taking that role).";
+
+      }
+
+      enum pre-master {
+
+        value 5;
+
+        description
+
+          "This port state provides an additional mechanism to
+
+          support more orderly reconfiguration of PTP Networks when
+
+          PTP Instances are added or deleted, PTP Instance
+
+          characteristics change, or connection topology changes.
+
+          In this state, a PTP Port behaves as it would if it were in
+
+          the master state except that it does not place certain
+
+          classes of PTP messages on the PTP Communication Path
+
+          associated with the PTP Port.";
+
+      }
+
+      enum master {
+
+        value 6;
+
+        description
+
+          "The PTP Port is the source of time on the
+
+          PTP Communication Path.";
+
+      }
+
+      enum passive {
+
+        value 7;
+
+        description
+
+          "The PTP Port is not the source of time on the
+
+          PTP Communication Path nor does it synchronize to a
+
+          Master Clock (receive time). The PTP Port can potentially
+
+          change to slave when PTP Instances are added or deleted,
+
+          PTP Instance characteristics change, or connection
+
+          topology changes.";
+
+      }
+
+      enum uncalibrated {
+
+        value 8;
+
+        description
+
+          "The PTP Port is anticipating a change to the slave state,
+
+          but it has not yet satisfied all requirements
+
+          (implementation or PTP Profile) necessary to ensure
+
+          complete synchronization. For example, an implementation
+
+          might require a minimum number of PTP Sync messages
+
+          in order to completely synchronize its servo algorithm.";
+
+      }
+
+      enum slave {
+
+        value 9;
+
+        description
+
+          "The PTP Port synchronizes to the PTP Port on the
+
+          PTP Communication Path that is in the master state
+
+          (i.e. receives time).";
+
+      }
+
+    }
+
+    description
+
+      "Enumeration for the state of the protocol engine associated 
+
+       with the PTP Port.  Values for this enumeration are specified
+
+       by the IEEE 1588 standard exclusively.";
+
+    reference
+
+      "6.6.2.2 of IEEE Std 1588-2019
+      6.7.2 of IEEE Std 1588-2019
+      9.2.5 of IEEE Std 1588-2019";
+ 
+
+  }
+
+
+  typedef instance-type-enumeration {
+
+    type enumeration {
+
+      enum oc {
+
+        value 0;
+
+        description
+
+          "Ordinary Clock";
+
+      }
+
+      enum bc {
+
+        value 1;
+
+        description
+
+          "Boundary Clock";
+
+      }
+
+      enum p2p-tc {
+
+        value 2;
+
+        description
+
+          "Peer-to-peer Transparent Clock";
+
+      }
+
+      enum e2e-tc {
+
+        value 3;
+
+        description
+
+          "End-to-end Transparent Clock";
+
+      }
+
+     }
+
+     description
+
+      "Enumeration for the type of PTP Instance.
+
+       Values for this enumeration are specified by the IEEE 1588
+
+       standard exclusively.";
+
+     reference
+
+      "8.2.1.5.5 of IEEE Std 1588-2019";
+
+  }
+
+    
+  typedef fault-severity-enumeration {
+
+    type enumeration {
+
+      enum emergency {
+
+        value 0;
+
+        description
+
+          "Emergency: system is unusable";
+
+      }
+
+      enum alert {
+
+        value 1;
+
+        description
+
+          "Alert: immediate action needed";
+
+      }
+
+      enum critical {
+
+        value 2;
+
+        description
+
+          "Critical: critical conditions";
+
+      }
+
+      enum error {
+
+        value 3;
+
+        description
+
+          "Error: error conditions";
+
+      }
+
+      enum warning {
+
+        value 4;
+
+        description
+
+          "Warning: warning conditions";
+
+      }
+
+      enum notice {
+
+        value 5;
+
+        description
+
+          "Notice: normal but significant condition";
+
+      }
+
+      enum informational {
+
+        value 6;
+
+        description
+
+          "Informational: informational messages";
+
+      }
+
+      enum debug {
+
+        value 7;
+
+        description
+
+          "Debug: debug-level messages";
+
+      }
+
+    }
+
+    description
+
+      "Enumeration for the severity of a fault record.
+
+       Values for this enumeration are specified by the IEEE 1588
+
+       standard exclusively.";
+
+    reference
+
+      "8.2.6.3 of IEEE Std 1588-2019";
+
+  }
+
+
+  typedef time-interval-type {
+
+    type int64;
+
+    description
+
+      "Time interval, expressed in nanoseconds, multiplied by 2^16.
+
+       Positive or negative time intervals outside the maximum range
+
+       of this data type shall be encoded as the largest positive and
+
+       negative values of the data type, respectively.";
+
+    reference
+
+      "5.3.2 of IEEE Std 1588-2019";
+
+  }
+
+
+  typedef clock-identity-type {
+
+    type binary {
+
+      length "8";
+
+    }
+
+    description
+
+      "Identifies unique entities within a PTP Network, 
+
+      e.g. a PTP Instance or an entity of a common service.
+
+      The identity is an 8-octet array, constructed according
+
+      to specifications in IEEE Std 1588, using an
+
+      organization identifier from the IEEE Registration
+
+      Authority.";
+
+    reference
+
+      "5.3.4 of IEEE Std 1588-2019
+      7.5.2.2 of IEEE Std 1588-2019";
+
+  }
+
+
+  grouping timestamp-grouping {
+
+    description
+
+      "The IEEE Std 1588 Timestamp type represents a 
+
+      positive time with respect to the epoch
+
+      of PTP Instance Time.
+
+      This type is represented in YANG as a grouping,
+
+      with leafs seconds-field and nanoseconds-field.";       
+
+    reference
+
+      "5.3.3 of IEEE Std 1588-2019";
+
+    
+
+    leaf seconds-field {
+
+      type uint64;
+
+      description
+
+        "The seconds-field member is the integer portion
+
+        of the timestamp in units of seconds. Only 48 bits
+
+        are valid (the upper 16 bits are always zero).";
+
+    }
+
+
+
+    leaf nanoseconds-field {
+
+      type uint32;
+
+      description
+
+        "The nanoseconds-field member is the fractional 
+
+        portion of the timestamp in units of nanoseconds.
+
+        The nanosecondsField member is always less than 10^9.
+
+        For example: +2.000000001 seconds is represented by 
+
+        seconds-field = 0000 0000 0002 (base 16) and 
+
+        nanoseconds-field = 0000 0001 (base 16).";
+
+    } 
+
+  }
+
+
+  grouping port-address-grouping {
+
+    description
+
+      "The IEEE Std 1588 PortAddress type represents the 
+
+      protocol address of a PTP Port.";       
+
+    reference
+
+      "5.3.6 of IEEE Std 1588-2019";
+
+    
+
+    leaf network-protocol {
+
+      type identityref {
+      	 base network-protocol-id;
+      }
+
+      description
+
+        "Protocol used by a PTP Instance to transport
+
+         PTP messages.";
+
+    }
+
+
+
+    leaf address-length {
+
+      type uint16;
+
+      description
+
+        "Number of octets in address-field.";
+
+    } 
+
+    
+
+    leaf address-field {
+
+      type binary;
+
+      description
+
+        "The protocol address of a PTP Port in the format 
+
+         defined by the mapping annex of the protocol as
+
+         identified by the network-protocol leaf. 
+
+         The most significant octet of the address-field
+
+         is mapped into the octet of the address-field 
+
+         member with index 0.";
+
+    }
+
+  }
+
+
+  grouping clock-quality-grouping {
+
+    description
+
+      "Quality of a PTP Instance, which contains IEEE Std 1588
+
+      clockClass, clockAccuracy and offsetScaledLogVariance.
+
+      PTP Instances with better quality are more likely to
+
+      become the Grandmaster PTP Instance.";       
+
+    reference
+
+      "5.3.7 of IEEE Std 1588-2019
+      8.2.1.3.1 of IEEE Std 1588-2019";
+
+    
+
+    leaf clock-class {
+
+      type uint8;
+
+      default 248;
+
+      description
+
+        "The clockClass denotes the traceability of the time
+
+         or frequency distributed by the clock.";
+
+      reference
+
+        "7.6.2.5 of IEEE Std 1588-2019";
+
+    }
+
+
+
+    leaf clock-accuracy {
+
+      type uint8;
+
+      description
+
+        "The clockAccuracy indicates the accuracy of the clock
+
+        (Local Clock of the PTP Instance).";
+
+      reference
+
+        "7.6.2.6 of IEEE Std 1588-2019";
+
+    }
+
+    
+
+    leaf offset-scaled-log-variance {
+
+      type uint16;
+
+      description
+
+        "The offsetScaledLogVariance indicates the stability of the
+
+        clock (Local Clock of the PTP Instance). It provides an
+
+        estimate of the variations of the clock from a linear timescale
+
+        when it is not synchronized to another clock using the protocol.";
+
+      reference
+
+        "7.6.2.7 of IEEE Std 1588-2019";
+
+    }
+
+  }
+
+
+  grouping fault-record-grouping {
+
+    description
+
+      "Record of a fault in the PTP Instance.
+
+      
+
+      NOTE - IEEE Std 1588 specifies a member
+
+      faultRecordLength for this type, which is needed
+
+      for PTP Management Messages, but is not needed for
+
+      YANG management.";       
+
+    reference
+
+      "5.3.10 of IEEE Std 1588-2019";
+
+
+    container time {
+    	
+      description
+    	  
+    	  "Time the fault occurred as indicated by the Timestamping
+    	  
+    	  Clock of the PTP Instance.  A value of all 1's for the
+    	  
+    	  fields in the timestamp shall indicate that the occurrence
+    	  
+    	  time is not available.";
+    	  
+      uses timestamp-grouping;
+    
+    }    
+
+    leaf severity {
+
+      type fault-severity-enumeration;
+
+      description
+
+        "Severity of the fault.";
+
+    }
+
+    
+
+    leaf name {
+
+      type string;
+
+      description
+
+        "Name for the fault, unique within the implementation.";
+
+    }
+
+    
+
+    leaf value {
+
+      type string;
+
+      description
+
+        "Any value that may be associated with the fault that is
+
+        necessary for fault diagnosis.";
+
+    }
+
+    
+
+    leaf description {
+
+      type string;
+
+      description
+
+        "Any supplementary description of the fault.";
+
+    }  
+
+  }
+
+
+  container ptp {
+
+    description
+
+      "Contains all nodes for the PTP data sets.
+
+       This hierarchy can be augmented with nodes
+
+       for a specific vendor or PTP Profile.";
+
+
+    list instance-list {
+
+
+
+      key "instance-number";
+
+
+
+      description
+
+        "List of one or more PTP Instances in the product (PTP Node).
+
+        Each PTP Instance represents a distinct instance of PTP
+
+        implementation (i.e. distinct Ordinary Clock, Boundary Clock,
+
+        or Transparent Clock), maintaining a distinct time.
+
+        PTP Instances may be created or deleted dynamically in
+
+        implementations that support dynamic create/delete.";
+
+      reference
+
+        "8.1.4.2 of IEEE Std 1588-2019";
+
+
+      leaf instance-number {
+
+        type uint32;
+
+        description
+
+          "The instance-list is indexed using a number that is
+
+           unique per PTP Instance within the PTP Node, applicable
+
+           to the management context only (i.e. not used in PTP 
+
+           messages). The domain-number of the PTP Instance is not
+
+           used as the key to instance-list, since it is possible
+
+           for a PTP Node to contain multiple PTP Instances using
+
+           the same domain-number.";
+
+        reference
+
+           "8.1.4.2 of IEEE Std 1588-2019";
+
+      }
+
+
+      container default-ds {
+
+        description
+        
+          "The default data set of the PTP Instance.
+
+           Note: In the context of the protocol, this data set is required
+
+           for an Ordinary Clock or Boundary Clock, and recommended
+
+           for a Transparent Clock. 
+
+           In the context of management (i.e. YANG), access to each
+
+           member of the data set (i.e. leaf) is optional.";
+
+        reference
+
+          "8.2.1 of IEEE Std 1588-2019";
+
+
+        leaf instance-type {
+
+          type instance-type-enumeration;
+
+          description
+
+            "The type of PTP Instance.
+
+             This leaf is read-only unless support for write is
+
+             explicitly specified by the applicable PTP Profile or
+
+             product specification.";
+
+          reference
+
+            "8.2.1.5.5 of IEEE Std 1588-2019";
+
+        }
+
+        leaf instance-enable {
+
+          type boolean;
+
+          description
+
+            "Indicates if the PTP Instance is enabled for 
+
+             PTP operation.
+
+             When management write is supported:
+
+             - Write of the value true shall cause the PTP Instance 
+
+               to initialize, only if the value was previously false.
+
+             - Write of the value false shall immediately disable
+
+               operation of the PTP Instance (i.e. analogous to power
+
+               off).
+
+             If this leaf is not supported, the PTP Instance shall be
+
+             specified-by-design to be enabled (true).
+
+             Unless stated otherwise by the applicable PTP Profile or 
+
+             product specifications, the default value is true.";
+
+          reference
+
+            "8.2.1.5.2 of IEEE Std 1588-2019";
+
+        } 
+
+        leaf clock-identity {
+
+          type clock-identity-type;
+
+          config false;
+
+          description
+
+            "The IEEE Std 1588 clockIdentity of the PTP Instance.";
+
+          reference
+
+            "8.2.1.2.2 of IEEE Std 1588-2019";
+
+        }  
+
+        leaf number-ports {
+
+          type uint16;
+
+          description
+
+            "The number of PTP Ports on the PTP Instance.
+
+            For an Ordinary Clock, the value shall be one.";        
+
+          reference
+
+            "8.2.1.2.3 of IEEE Std 1588-2019";
+
+        }  
+
+        container clock-quality {
+
+          description
+
+            "The IEEE Std 1588 clockQuality of the PTP Instance.
+
+             PTP Instances with better quality are more likely to
+
+             become the Grandmaster PTP Instance.";       
+
+          reference
+
+            "8.2.1.3.1 of IEEE Std 1588-2019";
+
+          uses clock-quality-grouping;
+
+        }
+
+        leaf priority1 {
+
+          type uint8;
+
+          description
+
+            "The IEEE Std 1588 priority1 of the PTP Instance.
+
+             Since priority1 is one of the first comparisons
+
+             performed by the Best Master Clock Algorithm (BMCA),
+
+             this leaf's configuration can be used to explicitly
+
+             select a Grandmaster PTP Instance.
+
+             Lower values take precedence. The default value of
+
+             priority1 is specified in the applicable PTP Profile.
+
+             The value of priority1 shall be configurable to any
+
+             value in the range 0 to 255, unless restricted by 
+
+             limits established by the applicable PTP Profile.";
+
+          reference
+
+            "7.6.2.3 of IEEE Std 1588-2019
+            8.2.1.4.1 of IEEE Std 1588-2019";
+
+        }
+ 
+        leaf priority2 {
+
+          type uint8;
+
+          description
+
+            "The IEEE Std 1588 priority2 of the PTP Instance.
+
+             The priority2 member is compared by the Best Master
+
+             Clock Algorithm (BMCA) after priority1 and clockQuality.
+
+             Lower values take precedence. The default value of
+
+             priority2 is specified in the applicable PTP Profile.
+
+             The value of priority2 shall be configurable to any
+
+             value in the range 0 to 255, unless restricted by 
+
+             limits established by the applicable PTP Profile.";
+
+          reference
+
+            "7.6.2.4 of IEEE Std 1588-2019
+            8.2.1.4.2 of IEEE Std 1588-2019";
+
+        }
+
+        leaf domain-number {
+
+          type uint8;
+
+          description
+
+            "The IEEE Std 1588 domainNumber of the PTP Instance.
+
+             A domain consists of one or more PTP Instances 
+
+             communicating with each other as defined by the 
+
+             protocol. A domain shall define the scope of PTP message
+
+             communication, state, operations, data sets, and
+
+             timescale. Therefore, each domain represents a distinct
+
+             time.
+
+             Within a PTP Network, a domain is identified by two
+
+             data set members: domainNumber and sdoId.
+
+             The domainNumber is the primary mechanism for end users
+
+             and system integrators to isolate the operation of a 
+
+             PTP Instance from PTP messages used in other domains.
+
+             The value of the domainNumber shall be configurable
+
+             to values permitted in IEEE Std 1588, unless the 
+
+             allowed values are further restricted by the applicable
+
+             PTP Profile.";
+
+          reference
+
+            "7.1 of IEEE Std 1588-2019
+            8.2.1.4.3 of IEEE Std 1588-2019";
+
+        }    
+
+        leaf sdo-id {
+
+          type uint16;
+
+          description
+
+            "The IEEE Std 1588 sdoId of the PTP Instance.
+
+             A domain consists of one or more PTP Instances 
+
+             communicating with each other as defined by the 
+
+             protocol. A domain shall define the scope of PTP message
+
+             communication, state, operations, data sets, and
+
+             timescale. Therefore, each domain represents a distinct
+
+             time.
+
+             Within a PTP Network, a domain is identified by two
+
+             data set members: domainNumber and sdoId.
+
+             The sdoId of a domain is a 12-bit integer in the 
+
+             closed range 0 to 4095.
+
+             The sdoId member is the primary mechanism for providing
+
+             isolation of PTP Instances of PTP Profiles specified by
+
+             a Standards Development Organization (SDO), from other 
+
+             PTP Instances operating under a PTP Profile specified 
+
+             by a different SDO.
+
+             In the absence of a specification for this value in an
+
+             applicable PTP Profile, the default value shall 
+
+             be 0x000.";
+
+           reference
+
+            "7.1 of IEEE Std 1588-2019
+            8.2.1.4.5 of IEEE Std 1588-2019
+            16.5 of IEEE Std 1588-2019";
+
+        }
+
+        leaf slave-only {
+
+          type boolean;
+
+          description
+
+            "The value of slave-only shall be true if the 
+
+             PTP Instance is a slave-only PTP Instance
+
+             (false for non-slave-only).
+
+             The slave-only member applies to Ordinary Clocks
+
+             only.
+
+             When slave-only is true, the PTP Instance implements
+
+             special behavior in the context of the state machines
+
+             that determine port-state.";
+
+          reference
+
+            "8.2.1.4.4 of IEEE Std 1588-2019
+            9.2.2.1 of IEEE Std 1588-2019";
+
+        }
+      
+        container current-time {
+
+          description
+
+            "For management read, this member shall return the
+            
+            current value of the PTP Instance Time.
+            
+            When management write is supported, this member
+            
+            shall set the PTP Instance Time.
+            
+            Time originates in the Grandmaster PTP Instance and
+            
+            is distributed by PTP to other PTP Instances in
+            
+            the domain.
+            
+            NOTE 1 - The time in the Grandmaster PTP Instance 
+
+            is normally determined by interacting with a primary 
+
+            reference, e.g., GPS, by means outside the scope of 
+
+            this standard.
+
+            NOTE 2 - When this member is used to set time in a 
+
+            PTP Instance other than the Grandmaster PTP Instance,
+
+            the PTP Node can return a management error.
+
+            NOTE 3 - If the time is set in a PTP Instance other 
+
+            than the Grandmaster PTP Instance, it will be 
+
+            overwritten by the operation of the protocol and will 
+
+            therefore exist only as a transient.";
+
+          reference
+
+          "8.2.1.5.1 of IEEE Std 1588-2019";
+
+          uses timestamp-grouping;
+
+        }
+
+
+        leaf two-step-flag {
+
+          type boolean;
+
+          status deprecated;
+
+          description
+
+            "When set to true, the PTP Instance is two-step, 
+
+             otherwise the PTP Instance is one-step.
+
+             This data set member is no longer used. However, 
+
+             the twoStepFlag of the PTP common header is used.
+
+             One step or two step egress behavior is allowed to 
+
+             be specified per PTP Port, or per PTP Instance. 
+
+             Management of the one/two step egress behavior of
+
+             a PTP Port is not provided by this standard, but 
+
+             can be specified as extensions to the data sets by a
+
+             PTP Profile or a product specification.";
+
+          reference
+
+            "8.2.1.2.1 of IEEE Std 1588-2019";
+
+        }   
+
+      }
+
+
+      container current-ds {
+
+        description
+
+          "Provides current data from operation
+
+          of the protocol.";
+
+        reference
+
+          "8.2.2 of IEEE Std 1588-2019";
+
+
+
+        leaf steps-removed {
+
+          type uint16;
+
+          default 0;
+
+          description
+
+            "The number of PTP Communication Paths traversed
+
+             between this PTP Instance and the Grandmaster 
+
+             PTP Instance.";
+
+          reference
+
+            "8.2.2.2 of IEEE Std 1588-2019";
+
+        }
+
+
+        leaf offset-from-master {
+
+          type time-interval-type;
+
+          description
+
+            "The current value of the time difference between 
+
+             a Master PTP Instance and a Slave PTP Instance as 
+
+             computed by the Slave PTP Instance.
+
+             NOTE - When a PTP Profile requires a Boundary
+
+             Clock to transfer offset information internally
+
+             from slave port to master port(s), this value
+
+             effectively returns the offset from the grandmaster.";
+
+          reference
+
+            "8.2.2.3 of IEEE Std 1588-2019";
+
+        }
+
+         
+
+        leaf mean-delay {
+
+          type time-interval-type;
+
+          description
+
+            "The current value of the mean propagation time between
+
+             a master port and a slave port as computed by the 
+
+             slave port.
+
+             If the PTP Instance has no PTP Port in slave or 
+
+             uncalibrated state, this returns zero.
+
+             Otherwise, the slave PTP port returns this value
+
+             depending on its delay-mechanism:
+
+             e2e: mean propagation time over the 
+
+             PTP Communication Path, i.e. <meanPathDelay>
+
+             p2p or common_p2p: mean propagation time over the 
+
+             PTP Link, i.e. <meanLinkDelay>
+
+             disabled or special: zero";
+
+          reference
+
+            "7.4.2 of IEEE Std 1588-2019
+            8.2.2.4 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        leaf mean-path-delay {
+
+          type time-interval-type;
+
+          status deprecated;
+
+          description
+
+            "In IEEE Std 1588-2008, currentDS.meanDelay was called 
+
+             currentDS.meanPathDelay. While the specification of
+
+             this member is retained in the current standard, the
+
+             member is renamed to currentDS.meanDelay. This change
+
+             is consistent with other changes that ensure clarity 
+
+             and consistency of naming, where 
+
+             - 'path' is associated with the 
+
+               request-response mechanism
+
+             - 'link' is associated with the 
+
+               peer-to-peer delay mechanism";
+
+          reference
+
+            "8.2.2.4 of IEEE Std 1588-2008";
+
+        }
+
+      }
+
+
+      container parent-ds {
+
+        description
+
+          "Provides data learned from the parent of this
+
+          PTP Instance (i.e. master port on the other side
+
+          of the path/link).";
+
+        reference
+
+          "8.2.3 of IEEE Std 1588-2019";
+
+
+
+        container parent-port-identity {
+
+          description
+
+            "The IEEE Std 1588 portIdentity of the PTP Port on the
+
+            Master PTP Instance that issues the Sync messages
+
+            used in synchronizing this PTP Instance.
+
+            A portIdentity consists of two members: clockIdentity
+
+            and portNumber.";
+
+          reference
+
+            "8.2.3.2 of IEEE Std 1588-2019";
+
+         
+          leaf clock-identity {
+
+            type clock-identity-type;
+
+            description
+
+              "IEEE Std 1588 clockIdentity of the parent.
+
+               This value is initialized with the clockIdentity 
+
+               of this PTP Instance (i.e., ../../default-ds/
+
+               clock-identity).";
+
+          }
+
+
+          leaf port-number {
+
+            type uint16;
+
+            description
+
+              "IEEE Std 1588 portNumber of the parent's port.
+
+               This value is initialized with zero.";
+
+          }
+
+        }
+
+
+
+        leaf parent-stats {
+
+          type boolean;
+
+          default false;
+
+          description
+
+            "When set to true, the values of
+
+             parent-ds/observed-parent-offset-scaled-log-variance
+
+             and
+
+             parent-ds/observed-parent-clock-phase-change-rate
+
+             have been measured and are valid.";
+
+          reference
+
+            "8.2.3.3 of IEEE Std 1588-2019";
+
+        }
+
+
+        leaf observed-parent-offset-scaled-log-variance {
+
+          type uint16;
+
+          default 65535;
+
+          description
+
+            "Estimate of the variance of the phase offset of the 
+
+             Local PTP Clock of the Parent PTP Instance as measured 
+
+             with respect to the Local PTP Clock in the Slave PTP
+
+             Instance. This measurement is optional, but if not made, 
+
+             the value of parent-ds/parent-stats shall be false.";
+
+          reference
+
+            "7.6.3.3 of IEEE Std 1588-2019
+            7.6.3.5 of IEEE Std 1588-2019
+            8.2.3.4 of IEEE Std 1588-2019";
+
+        }
+
+
+        leaf observed-parent-clock-phase-change-rate {
+
+          type int32;
+
+          description
+
+            "Estimate of the phase change rate of the
+
+             Local PTP Clock of the Parent PTP Instance as measured
+
+             by the Slave PTP Instance using its Local PTP Clock.
+
+             If the estimate exceeds the capacity of its data type, 
+
+             this value shall be set to 7FFF FFFF (base 16) or 
+
+             8000 0000 (base 16), as appropriate. A positive sign 
+
+             indicates that the phase change rate in the 
+
+             Parent PTP Instance is greater than that in the 
+
+             Slave PTP Instance. The measurement of this value is
+
+             optional, but if not measured, the value of 
+
+             parent-ds/parent-stats shall be false. 
+
+             The value is initialized as 7FFF FFFF (base 16) 
+
+             irrespective of whether the computation is implemented
+
+             in the PTP Instance.";
+
+          reference
+
+            "7.6.4.4 of IEEE Std 1588-2019
+            8.2.3.5 of IEEE Std 1588-2019";
+
+        }
+
+
+        leaf grandmaster-identity {
+
+          type clock-identity-type;
+
+          description
+
+            "The IEEE Std 1588 clockIdentity of the Grandmaster PTP
+
+             Instance.
+
+             This value is initialized with 
+
+             default-ds/clock-identity of this PTP Instance.";
+
+          reference
+
+            "8.2.3.6 of IEEE Std 1588-2019";
+
+        }
+
+
+        container grandmaster-clock-quality {
+
+          description
+
+            "The IEEE Std 1588 clockQuality of the Grandmaster PTP
+
+             Instance.
+
+             This value is initialized with 
+
+             default-ds/clock-quality of this PTP Instance.";
+
+          reference
+
+            "8.2.3.7 of IEEE Std 1588-2019";
+
+          uses clock-quality-grouping;
+
+        }
+
+
+
+        leaf grandmaster-priority1 {
+
+          type uint8;
+
+          description
+
+            "The IEEE Std 1588 priority1 of the Grandmaster PTP
+
+             Instance.
+
+             This value is initialized with 
+
+             default-ds/priority1 of this PTP Instance.";
+
+          reference
+
+            "8.2.3.8 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        leaf grandmaster-priority2 {
+
+          type uint8;
+
+          description
+
+            "The IEEE Std 1588 priority2 of the Grandmaster PTP
+
+             Instance.
+
+             This value is initialized with 
+
+             default-ds/priority2 of this PTP Instance.";
+
+          reference
+
+            "8.2.3.9 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        container protocol-address {
+
+          description
+
+            "The protocol address of the PTP Port
+
+             that issues the Sync messages used in synchronizing
+
+             this PTP Instance.";
+
+          reference
+
+            "8.2.3.10 of IEEE Std 1588-2019";
+
+          uses port-address-grouping;
+
+        }
+
+      }
+
+
+      container time-properties-ds {
+
+        description
+
+          "Provides data learned from the current
+          
+          Grandmaster PTP Instance.";
+
+        reference
+
+          "8.2.4 of IEEE Std 1588-2019";
+
+
+
+        leaf current-utc-offset-valid {
+
+          type boolean;
+
+          description
+
+            "The value of current-utc-offset-valid shall be true
+
+             if the values of current-utc-offset, leap59, and leap61
+
+             are known to be correct, otherwise it shall be false.
+
+             NOTE - The constraint for leap59 and leap61 did not 
+
+             exist in IEEE Std 1588-2008, and for compatibility, 
+
+             corresponding when statements were not included below.";
+
+          reference
+
+            "8.2.4.3 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        leaf current-utc-offset {
+
+          when "../current-utc-offset-valid='true'";
+
+          type int16;
+
+          description
+
+            "Specified as <dLS> in IERS Bulletin C, this provides
+
+             the offset from UTC (TAI - UTC). The offset is in 
+
+             units of seconds.";
+
+          reference
+
+            "7.2.4 of IEEE Std 1588-2019
+            8.2.4.2 of IEEE Std 1588-2019";
+
+        }    
+
+     
+
+        leaf leap59 {
+
+          type boolean;
+
+          description
+
+            "If the timescale is PTP, a true value for leap59
+
+             shall indicate that the last minute of the
+
+             current UTC day contains 59 seconds.
+
+             If the timescale is not PTP, the value shall be 
+
+             false.";
+
+          reference
+
+            "8.2.4.4 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf leap61 {
+
+          type boolean;
+
+          description
+
+            "If the timescale is PTP, a true value for leap61
+
+             shall indicate that the last minute of the
+
+             current UTC day contains 61 seconds.
+
+             If the timescale is not PTP, the value shall be 
+
+             false.";
+
+         reference
+
+           "8.2.4.5 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf time-traceable {
+
+          type boolean;
+
+          description
+
+            "The value of time-traceable shall be true if the 
+
+             timescale is traceable to a primary reference;
+
+             otherwise, the value shall be false.
+
+             The uncertainty specifications appropriate to the
+
+             evaluation of whether traceability to a primary
+
+             reference is achieved should be defined in the 
+
+             applicable PTP Profile. In the absence of such a 
+
+             definition the value of time-traceable is
+
+             implementation specific.";
+
+          reference
+
+            "8.2.4.6 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf frequency-traceable {
+
+          type boolean;
+
+          description
+
+            "The value of time-traceable shall be true if the 
+
+             frequency determining the timescale is traceable 
+
+             to a primary reference; otherwise, the value shall
+
+             be false.
+
+             The uncertainty specifications appropriate to the
+
+             evaluation of whether traceability to a primary
+
+             reference is achieved should be defined in the 
+
+             applicable PTP Profile. In the absence of such a 
+
+             definition the value of frequency-traceable is
+
+             implementation specific.";
+
+         reference
+
+           "8.2.4.7 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        leaf ptp-timescale {
+
+          type boolean;
+
+          description
+
+            "If ptp-timescale is true, the timescale of
+
+             the Grandmaster PTP Instance is PTP, which is
+
+             the elapsed time since the PTP epoch measured 
+
+             using the second defined by International Atomic 
+
+             Time (TAI).
+
+             If ptp-timescale is false, the timescale of
+
+             the Grandmaster PTP Instance is ARB, which is
+
+             the elapsed time since an arbitrary epoch.";
+
+          reference
+
+            "7.2.1 of IEEE Std 1588-2019
+            8.2.4.8 of IEEE Std 1588-2019";
+
+        }
+
+
+        leaf time-source {
+
+          type identityref {
+          	 base time-source-id;
+          }
+
+          description
+
+            "The source of time used by the Grandmaster 
+
+             PTP Instance.";
+
+          reference
+
+            "7.6.2.8 of IEEE Std 1588-2019
+            8.2.4.9 of IEEE Std 1588-2019";
+
+        }
+
+      }
+
+
+      container fault-log-ds {
+
+        if-feature fault-log;
+
+        description
+
+          "Represents an optional mechanism for logging of faults
+
+           that occur in the PTP Instance. If one member of
+
+           fault-log-ds is supported, all members shall be 
+
+           supported.";
+
+        reference
+
+          "8.2.6 of IEEE Std 1588-2019";
+
+        
+
+        leaf number-of-fault-records {
+
+          type uint16;
+
+          config false;
+
+          description
+
+            "The number of fault records available in
+
+             fault-record-list.";
+
+          reference
+
+            "8.2.6.2 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        list fault-record-list {
+
+          key "index";
+
+          description
+
+            "List of fault records, number-of-fault-records
+
+             in length.
+
+             The maximum length of fault-record-list is
+
+             implementation-specific. The fault-record-list
+
+             is maintained by the PTP Instance until
+
+             fault-log-ds.reset is written to true.";
+
+          reference
+
+            "8.2.6.3 of IEEE Std 1588-2019";
+
+
+
+          leaf index {
+
+            type uint16;
+
+            description
+
+              "Index to a record in fault-record-list, typically
+
+               sequential from 0 to (number-of-fault-records - 1).";
+
+          }
+
+
+
+          uses fault-record-grouping;
+
+        }
+
+        
+
+        leaf reset {
+
+          type boolean;
+
+          description
+
+            "Used to reset the fault log.
+
+             For management read, this member always returns false.
+
+             A management write of the value true shall cause the
+
+             contents of fault-record-list to be cleared, and
+
+             number-of-fault-records to be set to zero.
+
+             A management write of the value false has no effect, 
+
+             and the PTP Instance should return a management error.";
+
+         reference
+
+           "8.2.6.4 of IEEE Std 1588-2019";
+
+        }
+
+      }
+ 
+ 
+      container performance-monitoring-ds {
+
+        if-feature performance-monitoring;
+
+        description
+
+          "Provides data for the optional performance
+
+           monitoring mechanism, scoped to the PTP Instance.";
+
+        reference
+
+          "Annex J of IEEE Std 1588-2019";
+
+
+
+        leaf enable {
+
+          type boolean;
+
+          description
+
+            "Permits management control over the collection of
+
+             performance monitoring data, including 
+
+             performance-monitoring-ds (PTP Instance),
+
+             port-ds-list[]/performance-monitoring-port-ds
+
+             (PTP Port of PTP Instance), and 
+
+             common-services/cmlds/port-list[]/
+
+             performance-monitoring-port-ds (CMLDS Link Port
+
+             associated with enabled PTP Port). Unless otherwise
+
+             specified in the applicable PTP Profile, the value
+
+             shall be initialized false.";
+
+          reference
+
+            "J.5.1.1 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        list record-list {
+
+          key "index";
+
+          max-elements 99;
+
+          config false;
+
+          description
+
+            "List of performance monitoring records for the
+
+             PTP Instance. The list is organized as follows:
+
+             - 97 15-minute measurement records, the current record
+
+               at index 0, followed by the most recent 96 records.
+
+             - 2 24-hour measurement records, the current record 
+
+               at index 97, and the previous record at index 98.
+
+            
+
+            If a record is not implemented for a specific index,
+
+            management does not return the record. For example, 
+
+            if only four 15-minute periods are implemented, 
+
+            a management request for performance-monitoring-ds/
+
+            record-list[6] returns an error.
+
+            
+
+            If only some of the data is reported, the same index
+
+            values are used. As an example, if only the 24-hour 
+
+            statistics are accessed, the indexes are still 97 and 98.
+
+            
+
+            If a specific parameter (e.g. max-master-slave-delay)
+
+            is not implemented, management does not return the 
+
+            parameter (i.e., error). Parameters that are invalid 
+
+            (not measured correctly) shall be indicated with 
+
+            one in all bits, except the most significant. This 
+
+            represents the largest positive value of 
+
+            time-interval-type, indicating a value outside the 
+
+            maximum range.";
+
+          reference
+
+            "J.5.1.2 of IEEE Std 1588-2019";
+
+
+
+          leaf index {
+
+            type uint16;
+
+            description
+
+              "Index to each record in the list (0-99).";
+
+          }
+
+
+
+          leaf measurement-valid {
+
+            type boolean;
+
+            default false;
+
+            description
+
+              "The measurement-valid flag shall indicate the data 
+
+               can be correctly interpreted. Validity is 
+
+               implementation specific and may be defined in 
+
+               a PTP Profile. If for some periods the data is not 
+
+               valid for part of the data collection interval 
+
+               (e.g. the clock is not locked), a specific
+
+               implementation can report the statistics only for 
+
+               valid data and with measurement-valid true.
+
+              
+
+               This flag applies to all parameters for a 
+
+               given measurement period, including PTP Port 
+
+               and Link Port related.";
+
+          }
+
+
+
+          leaf period-complete {
+
+            type boolean;
+
+            default false;
+
+            description
+
+              "The period-complete flag shall indicate that 
+
+               measurements were performed during the entire 
+
+               period (15-minute or 24-hour). For example, 
+
+               if the PTP Instance is disabled for five minutes 
+
+               of a 15-minute period, period-complete is false. 
+
+               The period-complete flag is not related to the 
+
+               validity of measurements that were performed.
+
+              
+
+               This flag applies to all parameters for a 
+
+               given measurement period, including PTP Port 
+
+               and Link Port related.";
+
+          }
+
+
+
+          leaf pm-time {
+
+            type yang:timestamp;
+
+            default 0;
+
+            description
+
+              "Time of the beginning of the measurement record.
+
+               This leaf's type is YANG timestamp, which is based 
+
+               on system time (also known as local time). System
+
+               time is an unsigned integer in units of
+
+               10 milliseconds, using an epoch defined by the
+
+               implementation (typically time of boot-up).";
+
+            reference
+
+              "RFC 6991";
+
+          }
+
+          
+
+          leaf average-master-slave-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Average of the MasterSlaveDelay for this interval.";
+
+          }
+
+          leaf minimum-master-slave-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Minimum of the MasterSlaveDelay for this interval.";
+
+          }
+
+          leaf maximum-master-slave-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Maximum of the MasterSlaveDelay for this interval.";
+
+          }
+
+          leaf stddev-master-slave-delay {
+
+            type time-interval-type;
+
+            description
+
+              "StdDev of the MasterSlaveDelay for this interval.";
+
+          }
+
+          leaf average-slave-master-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Average of the SlaveMasterDelay for this interval.";
+
+          }
+
+          leaf minimum-slave-master-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Minimum of the SlaveMasterDelay for this interval.";
+
+          }
+
+          leaf maximum-slave-master-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Maximum of the SlaveMasterDelay for this interval.";
+
+          }
+
+          leaf stddev-slave-master-delay {
+
+            type time-interval-type;
+
+            description
+
+              "StdDev of the SlaveMasterDelay for this interval.";
+
+          }
+
+          leaf average-mean-path-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Average of the <meanPathDelay> for this interval.";
+
+          }
+
+          leaf minimum-mean-path-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Minimum of the <meanPathDelay> for this interval.";
+
+          }
+
+          leaf maximum-mean-path-delay {
+
+            type time-interval-type;
+
+            description
+
+              "Maximum of the <meanPathDelay> for this interval.";
+
+          }
+
+          leaf stddev-mean-path-delay {
+
+            type time-interval-type;
+
+            description
+
+              "StdDev of the <meanPathDelay> for this interval.";
+
+          }
+
+          leaf average-offset-from-master {
+
+            type time-interval-type;
+
+            description
+
+              "Average of the <offsetFromMaster> for this interval.";
+
+          }
+
+          leaf minimum-offset-from-master {
+
+            type time-interval-type;
+
+            description
+
+              "Minimum of the <offsetFromMaster> for this interval.";
+
+          }
+
+          leaf maximum-offset-from-master {
+
+            type time-interval-type;
+
+            description
+
+              "Maximum of the <offsetFromMaster> for this interval.";
+
+          }
+
+          leaf stddev-offset-from-master {
+
+            type time-interval-type;
+
+            description
+
+              "StdDev of the <offsetFromMaster> for this interval.";
+
+          }
+
+        }
+
+      }
+
+
+      list port-ds-list {
+
+        key "port-number";
+
+        description
+
+          "List of data for each PTP Port in the PTP Instance.
+
+           The list is structured as leafs for each member
+
+           of the IEEE Std 1588 portDS (primary port data set),
+
+           followed by containers for each optional port data set.";
+
+        reference
+
+          "8.1.4.2 of IEEE Std 1588-2019";
+
+
+
+        leaf port-number {
+
+          type uint16;
+
+          description
+
+            "IEEE Std 1588 portNumber, an index identifying
+
+             a specific PTP Port on a PTP Instance.
+
+             The portNumber values for the PTP Ports on a PTP Instance
+
+             shall be mutually distinct integers between 
+
+             1 and 0xFFFE, inclusive.
+
+             The all-zeros and all-ones portNumber values are used
+
+             for special purposes. The all-ones values typically
+
+             represents all ports, or wildcard. The all-zeros value
+
+             typically represents invalid or null.
+
+    
+
+             The data sets (i.e. information model) of IEEE Std 
+
+             1588 specify a member portDS.portIdentity, which 
+
+             contains members clockIdentity and portNumber.
+
+             In this YANG data model, portIdentity is not modeled 
+
+             in the port-ds-list, but its members are provided 
+
+             as follows:
+
+             - portIdentity.portNumber is provided as this 
+
+               port-number leaf in port-ds-list; and 
+
+             - portIdentity.clockIdentity is provided as the
+
+               clock-identity leaf in default-ds of the PTP Instance
+
+               (i.e., ../../default-ds/clock-identity).";       
+
+          reference
+
+            "7.5.2.3 of IEEE Std 1588-2019
+            8.2.15.2.1 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        leaf port-state {
+
+          type port-state-enumeration;
+
+          default "initializing";
+
+          description
+
+            "Current state of the protocol engine associated 
+
+             with this PTP Port.";
+
+          reference
+
+            "8.2.15.3.1 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf underlying-interface {
+
+        	type if:interface-ref;
+
+        	description
+
+            "Reference to the configured underlying IETF YANG
+
+    	       interface that is used by this PTP Port for
+
+        	   transport of PTP messages. Among other data,
+
+        	   physical identifiers for the interface
+
+        	   (e.g. MAC address) can be obtained using this
+
+        	   reference.";
+
+          reference
+
+            "RFC 8343";
+
+        }
+
+     
+
+        leaf port-enable {
+
+          type boolean;
+
+          description
+
+            "Indicates if the PTP Port is enabled for 
+
+             PTP operation.
+
+             When management write is supported:
+
+             - Write of the value true causes the DESIGNATED_ENABLED
+
+               event to occur, even if the value was previously true.
+
+             - Write of the value false causes the DESIGNATED_DISABLED
+
+               event to occur, even if the value was previously false.
+
+             If this leaf is not supported, the PTP Port shall be
+
+             specified-by-design to be enabled (true).
+
+             Unless stated otherwise by the applicable PTP Profile or 
+
+             product specifications, the default value is true.";
+
+          reference
+
+            "8.2.15.5.1 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        leaf log-min-delay-req-interval {
+
+          type int8;
+
+          description
+
+            "Logarithm to the base 2 of the IEEE Std 1588 
+
+             minDelayReqInterval, the minimum permitted 
+
+             mean time interval between successive Delay_Req
+
+             messages sent by a Slave PTP Instance.";
+
+          reference
+
+            "7.7.2.4 of IEEE Std 1588-2019
+            8.2.15.3.2 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf mean-link-delay {
+
+          type time-interval-type;
+
+          default 0;
+
+          description
+
+            "If the value of the delay-mechanism leaf is p2p
+
+             this value shall be an estimate of the current one-way
+             
+             propagation delay on the PTP Link attached to this
+             
+             PTP Port, computed using the peer-to-peer delay mechanism.
+
+             If the value of the delay-mechanism leaf is common-p2p,
+
+             this value shall be equal to the value of
+
+             ptp/common-services/cmlds/port-list[]/mean-link-delay.
+
+             If the value of the delay-mechanism leaf is e2e,
+
+             disabled, or special, this value shall be zero.";
+
+          reference
+
+            "8.2.15.3.3 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        leaf peer-mean-path-delay {
+
+          type time-interval-type;
+
+          default 0;
+
+          status deprecated;
+
+          description
+
+            "In IEEE Std 1588-2008, this data set member was called 
+
+             portDS.peerMeanPathDelay. While the specification of
+
+             this member is retained in the current standard, the
+
+             member is renamed to portDS.meanLinkDelay
+
+             (i.e., ../mean-link-delay). This change is consistent
+
+             with other changes that ensure clarity and consistency
+
+             of naming, where 
+
+             - 'path' is associated with the 
+
+               request-response mechanism
+
+             - 'link' is associated with the 
+
+               peer-to-peer delay mechanism";
+
+          reference
+
+            "8.2.5.3.3 of IEEE Std 1588-2008";
+
+        }
+
+     
+
+        leaf log-announce-interval {
+
+          type int8;
+
+          description
+
+            "Logarithm to the base 2 of the mean IEEE Std 1588 
+
+             announceInterval, the time interval between successive
+
+             Announce messages sent by a PTP Port.";
+
+          reference
+
+            "7.7.2.2 of IEEE Std 1588-2019
+            8.2.15.4.1 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf announce-receipt-timeout {
+
+          type uint8;
+
+          description
+
+            "The integral multiple of IEEE Std 1588 announceInterval
+
+             that must pass without receipt of an Announce message
+
+             before the occurrence of the event
+
+             ANNOUNCE_RECEIPT_TIMEOUT_EXPIRES. The range shall be 
+
+             2 to 255 subject to further restrictions of the
+
+             applicable PTP Profile. While 2 is permissible, 
+
+             normally the value should be at least 3.";
+
+          reference
+
+            "7.7.3.1 of IEEE Std 1588-2019
+            8.2.15.4.2 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf log-sync-interval {
+
+          type int8;
+
+          description
+
+            "Logarithm to the base 2 of the mean IEEE Std 1588 
+
+             syncInterval, the time interval between successive
+
+             Sync messages, when transmitted as multicast messages.
+
+             The rates for unicast transmissions are negotiated 
+
+             separately on a per PTP Port basis and are not 
+
+             constrained by this leaf.";
+
+          reference
+
+            "7.7.2.3 of IEEE Std 1588-2019
+            8.2.15.4.3 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf delay-mechanism {
+
+          type delay-mechanism-enumeration;
+
+          description
+
+            "The path delay measuring mechanism used by the PTP Port in
+
+             computing <meanDelay> (propagation delay). The default value
+
+             is implementation-specific unless otherwise stated in the
+
+             applicable PTP Profile.";
+
+          reference
+
+            "8.2.15.4.4 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf log-min-pdelay-req-interval {
+
+          type int8;
+
+          description
+
+            "Logarithm to the base 2 of the IEEE Std 1588 
+
+             minPdelayReqInterval, the minimum permitted 
+
+             mean time interval between successive Pdelay_Req
+
+             messages sent over a PTP Link.";
+
+          reference
+
+            "7.7.2.5 of IEEE Std 1588-2019
+            8.2.15.4.5 of IEEE Std 1588-2019";
+
+        }
+
+     
+
+        leaf version-number {
+
+          type uint8;
+
+          description
+
+            "The PTP major version in use on the PTP Port.
+
+             NOTE - This indicates the version of the
+
+             IEEE 1588 standard, and not the version of an
+
+             applicable PTP Profile.";
+
+          reference
+
+            "8.2.15.4.6 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        leaf minor-version-number {
+
+          type uint8;
+
+          description
+
+            "The PTP minor version in use on the PTP Port.
+
+             NOTE - This indicates the version of the
+
+             IEEE 1588 standard, and not the version of an
+
+             applicable PTP Profile.";
+
+          reference
+
+            "8.2.15.4.7 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        leaf delay-asymmetry {
+
+          type time-interval-type;
+
+          description
+
+            "The value of IEEE Std 1588 <delayAsymmetry>
+
+             applicable to the PTP Port, which is the 
+
+             difference in transmission time in one direction
+
+             as compared to the opposite direction.";
+
+          reference
+
+            "7.4.2 of IEEE Std 1588-2019
+            8.2.15.4.8 of IEEE Std 1588-2019";
+
+        }
+
+        
+
+        leaf master-only {
+
+          type boolean;
+
+          description
+
+            "If the value of master-only is true, the PTP Port
+
+             shall be in the IEEE Std 1588 masterOnly mode.
+
+             If the value is false, the PTP Port shall not be
+
+             in the masterOnly mode.
+
+             When master-only is true, the PTP Port can never enter
+             
+             the slave port-state.";
+
+          reference
+
+            "8.2.15.5.2 of IEEE Std 1588-2019
+            9.2.2.2 of IEEE Std 1588-2019";
+
+        }
+
+
+
+        container description-port-ds {
+
+          description
+
+            "Provides descriptive information for the PTP Port.";
+
+          reference
+
+            "8.2.18 of IEEE Std 1588-2019";
+
+
+
+          leaf profile-identifier {
+
+            type binary {
+
+              length "6";
+
+            }
+
+            description
+
+              "When profile-identifier is supported, its value 
+
+               shall identify the PTP Profile implemented by the 
+
+               PTP Port, using the value assigned by the organization 
+
+               that created the PTP Profile. The profile identifier
+
+               is six octets that identify the PTP Profile's
+
+               organization, profile within the organization,
+
+               and version.";
+
+            reference
+
+              "8.2.18.2 of IEEE Std 1588-2019
+              20.3.3 of IEEE Std 1588-2019";
+
+          }
+
+          
+
+          container protocol-address {
+
+            description
+
+              "Protocol address which is used as the source address by
+
+              the network transport protocol for this PTP Port.";
+
+            reference
+
+              "8.2.18.3 of IEEE Std 1588-2019";
+
+            uses port-address-grouping;
+
+          }
+
+        }
+
+
+        container unicast-negotiation-port-ds {
+
+          if-feature unicast-negotiation;
+
+          description
+
+            "Provides management access to the optional unicast
+
+             negotiation mechanism.";
+
+          reference
+
+            "16.1 of IEEE Std 1588-2019";
+
+
+
+          leaf enable {
+
+            type boolean;
+
+            description
+
+              "When enable is false, the unicast negotiation
+
+               mechanism is disabled on this PTP Port.
+
+               When enable is true, the unicast negotiation
+
+               mechanism is enabled on this PTP Port.
+
+               By default, this mechanism shall be disabled
+
+               unless otherwise specified in the applicable 
+
+               PTP Profile.";
+
+            reference
+
+              "8.2.19.2 of IEEE Std 1588-2019";
+
+          } 
+
+        }
+
+
+
+        container unicast-discovery-port-ds {
+
+          if-feature unicast-discovery;
+
+          description
+
+            "Provides management access to the optional unicast
+
+             discovery mechanism.";
+
+          reference
+
+            "17.4.3 of IEEE Std 1588-2019";
+
+
+
+          leaf max-table-size {
+
+            type uint16;
+
+            config false;
+
+            description
+
+              "Maximum number of elements permitted 
+
+               in the port-address list.
+
+              
+
+               NOTE - The actualTableSize of IEEE Std 1588 is not
+
+               applicable for YANG, since YANG mechanisms can be used 
+
+               to control the number of elements in port-address.";
+
+          }
+
+
+
+          leaf log-query-interval {
+
+            type int8;
+
+            description
+
+              "Logarithm to the base 2 of the mean interval in
+
+               seconds between requests from a PTP Instance for 
+
+               a unicast Announce message. The default value is
+
+               specified by the applicable PTP Profile.";
+
+          }
+
+          
+
+          list port-address {
+
+            key "index";
+
+            description
+
+              "List of port addresses for unicast discovery.";
+
+            
+
+            leaf index {
+
+              type uint16;
+
+              description
+
+                "Index to a port address in the list, typically
+
+                 sequential from 0 to N-1, where N is the number of
+
+                 port addresses.";
+
+            }
+
+            
+
+            uses port-address-grouping;
+
+          }
+
+        }
+
+
+
+        container performance-monitoring-port-ds {
+
+          if-feature performance-monitoring;
+
+          description
+
+            "Provides data for the optional performance
+
+             monitoring mechanism, scoped to each PTP Port.";
+
+          reference
+
+            "IEEE Std 1588-2019: 8.2.26, M.5.2";
+
+         
+
+          list record-list {
+
+            key "index";
+
+            max-elements 99;
+
+            config false;
+
+            description
+
+              "List of performance monitoring records for the
+
+               PTP Port, unrelated to the peer-to-peer delay
+
+               measurement mehanism. The list is organized
+
+               as follows:
+
+               - 97 15-minute measurement records, the current record
+
+                 at index 0, followed by the most recent 96 records.
+
+               - 2 24-hour measurement records, the current record 
+
+                 at index 97, and the previous record at index 98.
+
+              
+
+              If a record is not implemented for a specific index,
+
+              management does not return the record. For example, 
+
+              if only four 15-minute periods are implemented, 
+
+              a management request for 
+
+              performance-monitoring-port-ds/record-list[6] 
+
+              returns an error.
+
+              
+
+              If only some of the data is reported, the same index
+
+              values are used. As an example, if only the 24-hour 
+
+              statistics are accessed, the indexes are still 
+
+              97 and 98.
+
+              
+
+              If a specific parameter (e.g. sync-tx)
+
+              is not implemented, management does not return the 
+
+              parameter (i.e., error). Parameters that are invalid 
+
+              (not measured correctly) shall be indicated with 
+
+              with the value zero, indicating that nothing was 
+
+              counted.
+
+              
+
+              Each counter in the record shall be initialized to
+
+              zero at the start of a new 15-minute and 
+
+              24-hour interval.";
+
+            reference
+
+              "J.5.2.2 of IEEE Std 1588-2019";
+
+
+
+            leaf index {
+
+              type uint16;
+
+              description
+
+                "Index to each record in the list (0-99).";
+
+            }
+
+            leaf pm-time {
+
+              type yang:timestamp;
+
+              default 0;
+
+              description
+
+                "Time of the beginning of the measurement record.
+
+                 This leaf's type is YANG timestamp, which is based 
+
+                 on system time (also known as local time). System
+
+                 time is an unsigned integer in units of
+
+                 10 milliseconds, using an epoch defined by the
+
+                 implementation (typically time of boot-up).";
+
+              reference
+
+                "RFC 6991";
+
+            }          
+
+            leaf announce-tx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Announce
+
+                 messages that have been transmitted for this
+                 
+                 interval.";
+
+            }
+
+            leaf announce-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Announce 
+
+                 messages from the current GM that have been 
+
+                 received for this interval.";
+
+            }
+
+            leaf announce-foreign-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the total number of Announce
+
+                 messages from the foreign Masters that have been
+
+                 received for this interval.";
+
+            }
+
+            leaf sync-tx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Sync
+
+                 messages that have been transmitted for this
+                 
+                 interval.";
+
+            }
+
+            leaf sync-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Sync 
+
+                 messages that have been received for this
+                 
+                 interval";
+
+            }
+
+            leaf follow-up-tx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Follow_Up
+
+                 messages that have been transmitted for this
+                 
+                 interval.";
+
+            }
+
+            leaf follow-up-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Follow_Up 
+
+                 messages that have been received for this
+                 
+                 interval.";
+
+            }
+
+            leaf delay-req-tx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Delay_Req
+
+                 messages that have been transmitted for this
+                 
+                 interval.";
+
+            }
+
+            leaf delay-req-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Delay_Req 
+
+                 messages that have been received for this
+                 
+                 interval.";
+
+            }
+
+            leaf delay-resp-tx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Delay_Resp
+
+                 messages that have been transmitted for this
+                 
+                 interval.";
+
+            }
+
+            leaf delay-resp-rx {
+
+              type yang:zero-based-counter32;
+
+              description
+
+                "Counter indicating the number of Delay_Resp
+
+                 messages that have been received for this
+                 
+                 interval.";
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+
+    container transparent-clock-default-ds {
+
+      status deprecated;
+
+      description
+
+        "This default data set was specified in 
+
+         IEEE Std 1588-2008, and under some interpretations,
+
+         it applied to all domains, which in turn means that it
+
+         represents multiple Transparent Clocks.
+
+         In IEEE Std 1588-2019, this data set is specified as
+
+         applying to the PTP Node (all domains), but the data set is
+
+         deprecated. For new designs, the standard recommends that 
+
+         Transparent Clocks use the PTP Instance data sets 
+
+         (i.e., /ptp/instance-list[]), such that each Transparent 
+
+         Clock supports a single PTP Instance and domain.";
+
+      reference
+
+        "8.3.1 of IEEE Std 1588-2019";
+
+ 
+
+      leaf clock-identity {
+
+        type clock-identity-type;
+
+        config false;
+
+        status deprecated;
+
+        description
+
+          "The clockIdentity of the local clock.";
+
+        reference
+
+          "8.3.2.2.1 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf number-ports {
+
+        type uint16;
+
+        status deprecated;
+
+        description
+
+          "The number of PTP Ports of the device.";
+
+        reference
+
+          "8.3.2.2.2 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf delay-mechanism {
+
+        type delay-mechanism-enumeration;
+
+        status deprecated;
+
+        description
+
+          "The propagation delay measuring mechanism (e2e or p2p).";
+
+        reference
+
+          "8.3.2.3.1 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf primary-domain {
+
+        type uint8;
+
+        default 0;
+
+        status deprecated;
+
+        description
+
+             "The domainNumber of the primary syntonization domain.";
+
+        reference
+
+          "8.3.2.3.2 of IEEE Std 1588-2019";
+
+      }
+
+    }
+
+
+
+    list transparent-clock-port-ds-list {
+
+      key "port-number";
+
+      status deprecated;
+
+      description
+
+        "This list of port data sets was specified in 
+
+         IEEE Std 1588-2008, and under some interpretations,
+
+         it applied to all domains, which in turn means that it
+
+         represents multiple Transparent Clocks.
+
+         In IEEE Std 1588-2019, this list is specified as
+
+         applying to the PTP Node (all domains), but the list is
+
+         deprecated. For new designs, the standard recommends that 
+
+         Transparent Clocks use the PTP Instance data sets 
+
+         (i.e., /ptp/instance-list[]/post-ds-list[]), such that
+
+         each Transparent Clock supports a single PTP Instance 
+
+         and domain.";
+
+      reference
+
+        "8.3.1 of IEEE Std 1588-2019";
+
+ 
+
+      leaf port-number {
+
+          type uint16;
+
+          status deprecated;
+
+          description
+
+            "IEEE Std 1588 portNumber, an index identifying
+
+            a specific PTP Port on a PTP Instance.
+
+   
+
+            The data sets (i.e. information model) of IEEE Std 
+
+            1588 specify transparentClockPortDS.portIdentity, which
+
+            contains members clockIdentity and portNumber.
+
+            In this YANG data model, portIdentity is not modeled 
+
+            in the transparent-clock-port-ds-list, but its members
+
+            are provided as follows:
+
+            - portIdentity.portNumber is provided as this 
+
+              port-number leaf in transparent-clock-port-ds-list; and
+
+            - portIdentity.clockIdentity is provided as the
+
+              clock-identity leaf in default-ds
+
+              (i.e., ../../transparent-clock-default-ds/
+
+              clock-identity).";       
+
+          reference
+
+            "8.3.3.2.1 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf log-min-pdelay-req-interval {
+
+        type int8;
+
+        status deprecated;
+
+        description
+
+          "The logarithm to the base 2 of the
+
+           minPdelayReqInterval (minimum permitted mean time
+
+           interval between successive Pdelay_Req messages).";
+
+        reference
+
+          "8.3.3.3.1 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf faulty-flag {
+
+        type boolean;
+
+        default false;
+
+        status deprecated;
+
+        description
+
+          "Shall be true if the port is faulty and false
+
+           if the port is operating normally.";
+
+        reference
+
+          "8.3.3.3.2 of IEEE Std 1588-2019";
+
+      }
+
+ 
+
+      leaf peer-mean-path-delay {
+
+        type time-interval-type;
+
+        default 0;
+
+        status deprecated;
+
+        description
+
+          "An estimate of the current one-way propagation delay
+
+           on the link when the delayMechanism is P2P; otherwise,
+
+           it is zero.";
+
+        reference
+
+          "8.3.3.3.3 of IEEE Std 1588-2019";
+
+      }
+     
+    }
+
+  }  
+
+
+  container gnss {
+  	
+    if-feature gnss;
+  	 
+    description
+  	 
+    "provides monitoring access to the optional set
+  	 
+    of parameters associated with GNSS Antenna
+  	 
+    and satellite lock status";
+  	 
+    list gnss-instance-list{
+  	 	
+  	  key "gnss-instance-number";
+  	 	 
+  	  description
+
+      "List of one or more GNSS Instances in the device.
+
+      Each GNSS Instance represents a distinct instance of a GNSS
+
+      implementation";
+        
+        
+      leaf gnss-instance-number {
+
+        type uint8;
+
+        description
+
+        "The instance-list is indexed using a number that is
+
+        unique per GNSS Instance within the device, applicable
+
+        to the management context only";
+
+      }
+
+      typedef gnssid-enumeration {
+          	
+        type enumeration {
+            	
+          enum unknown {
+            	 	
+            value 0;
+            	 	 
+            description
+            	 	 
+            "The GNSS system being used is either unknown or
+            	 	 
+            not described in this enumeration.";
+            	 	
+          }
+            	 
+          enum GPS {
+            		
+             value 1;
+            		 
+            description
+            		 
+            "The Global Positioning System GNSS operated by the United States Space Force.";
+            		
+          }
+            	 
+          enum GLONASS {
+            	 	
+            value 2;
+            	 	 
+            description
+            	 	 
+            "The GLONASS GNSS operated by the Roscosmos State Corporation for Space Activities.";
+            	 	 
+           }
+            	 
+          enum Galileo {
+            	 	
+            value 3;
+            	 	 
+            description
+            	 	 
+            "The Galileo GNSS operated by the European Global Navigation Satellite Systems Agency,
+     	    		 	  
+     	   	   and the European Space Agency.";
+            	 	
+          }
+            	 
+          enum BDS {
+            	 	
+            value 4;
+            	 	 
+            description
+            	 	 
+            "The Beidou Navigation Satellite System (BDS) GNSS operated by
+     	    		 	  
+     	   	   the China National Space Administration (CNSA).";
+            	 	
+          }
+            	 
+          enum QZSS {
+            	 	
+            value 5;
+            	 	 
+            description
+            	 	 
+            "The Quasi-Zenith Satellite System Satellite-based Augmentation System (SBAS)
+     	    		 	  
+     	   	   also known as Michibiki operated by the Japan Aerospace Exploration Agency.";
+            	 	
+          }
+            	 
+          enum NAVIC {
+            	 	
+            value 6;
+            	 	 
+            description
+            	 	 
+            "Navigation with Indian Constellation, the Indian Regional
+     	    		 	  
+     	   	   Navigation Satellite System (IRNSS) operated by the Indian Space
+     	    		 	  
+         	   Research Organisation (ISRO).";
+            	 	
+            	 	
+          }
+            	 
+            	 
+        }	
+          	
+      }
+  	
+  	  container sky-object-ds {
+
+  	    description
+  	 
+  	    "Device Name, time and date and list of Objects in skyview";
+  	 
+ 	   	 
+  	    leaf device-description {
+  		
+  		    type string;
+  		    
+  		    default "";
+  		    
+  		    config false; 
+  		  
+  		    description
+  		
+  		    "Textual description of the Originating Device:
+  		 
+  		    Manufacturer, Product Name, Representative Version Numbers";
+      	
+        } 
+  	
+  	    leaf time {
+  		
+  		    type string;
+  		    
+  		    default "";
+  		
+  		    config false;
+  		  
+  		    description
+  		
+  		    "Time/date stamp in ISO8601 format UTC.
+  		 		
+  		    Complete date, plus hours, minutes, seconds and a decimal
+  		
+  		    fraction of a second to 0.001s resolution
+  		
+  		    YYYY-MM-DDThh:mm:ss:sssTZD
+  		
+  		    e.g. 1997-07-16T19:20:30.456Z";
+  	   
+  	    }
+  	
+        list satellite-list {
+  	 	
+  	 	    key "satellite";
+  	 	    
+  	 	    max-elements 255;
+  	 	 
+  	 	    config false;
+  	 	    
+  	 	    description
+  	 	 
+  	 	    "List of satellite objects in skyview identified by a combination of
+  	 	    System ID (constellation), Satellite ID (vehicle), Signal ID";
+  	   
+  	     	
+  	      leaf satellite {
+  	 	
+  	 	      type uint8;	 	   
+  	 	      	 	   
+  	 	      description
+  	 	 
+  	 	      "Unique identifier of each satellite in the list as seen by the receiver";
+  	 	
+  	      }
+
+          leaf gnssid {
+        	
+        	  type gnssid-enumeration;
+        	   
+        	  default unknown;
+        	 
+        	  config false;
+        	 
+        	  description
+        	 
+        	  "The System ID (constellation) of the Global Navigation Satellite System that the
+          	 
+            Satellite Receiver is targeting";
+        	
+          }
+    
+          leaf svid {
+           	
+           	 type uint8;
+           	 
+           	 default 0;
+           	
+           	 config false;
+           	
+           	 description
+           	 
+           	 "The Satellite ID (vehicle) within its constellation.
+           	           	
+           	 This is only valid when combines with a System ID (gnssid).";
+                      	
+          }
+         
+          leaf sigid {
+           	
+           	 type uint8;
+           	 
+           	 default 0;
+           	 
+           	 config false;
+           	 
+           	 description
+           	
+           	 "The signal ID of this vehicle.
+           	 
+           	 This is only valid when combined with a
+           	 
+           	 System ID (gnssid) and a Satellite ID (svid).";
+           	
+          }  	      
+  	      
+          leaf ss {
+        	
+        	  type uint8;
+        	 
+        	  default 255;
+        	 
+        	  config false;
+        	 
+        	  description
+        	 
+        	  "Signal Strength 0 to 254, dB re 1uV/m
+        	 
+        	  255 indicates unknown
+        	        	 
+        	  Note: gpsd Table 3 describes this as Signal to Noise Ratio in dBHz.";
+        	         	
+          }
+
+          leaf used {
+        	 
+        	  type boolean;
+        	 
+        	  config false;
+        	 
+        	  default false;
+        	 
+        	  description
+        	 
+        	  "True if this satellite used in the current solution.";
+          
+          }
+
+     	    leaf iodl {
+     	    	
+     	    	 type boolean;
+     	    	 
+     	    	 default false;
+     	    	 
+     	    	 config false;
+     	    	 
+     	    	 description
+     	    	 
+     	    	 "True indicates that this information relates
+     	    	 
+     	    	 to the satellite information in an accompanying
+     	    	 
+     	    	 type 1 or type 9 message.";
+     	    	
+     	    }
+
+     	    leaf health {
+     	    	
+     	    	 type uint8;
+     	    	 
+     	    	 default 255;
+     	    	 
+     	    	 config false;
+     	    	 
+     	    	 description
+     	    	 
+     	    	 "0 indicates that the satellite is healthy
+     	    	 
+     	    	 255 indicates unknown, any other value indicates a problem.";
+     	    	 
+     	    	 reference
+     	    	 
+     	    	 "IS-GPS-200, 20.3.3.3.1.4 SV Health,
+     	    	 
+     	    	 Table 20-VII LNAV Data Health Indications";
+     	    	
+     	    }
+
+     	    leaf cnr {
+     	    
+     	      type uint8;
+     	      
+     	      default 0;
+     	      
+     	      config false;
+     	      
+     	      description
+     	      
+     	      "The carrier to noise ratio of the
+     	      
+     	      received signal in dB(Hz).  Note gpsd table
+     	      
+     	      22 uses snr but then describes this as carrier
+     	      
+     	      to noise ratio";
+     	
+          }
+
+     	    leaf health-en {
+     	    	
+     	       type boolean;
+     	       
+     	       default false;
+     	    	 
+     	    	 config false;
+     	    	 
+     	    	 description
+     	    	 
+     	    	 "True indicates that the satellite is healthy even 
+     	    	 
+     	    	 if the satellite navigation data indicates unhealthy.";
+     	    	
+     	    }
+
+     	    leaf new-data {
+     	    	
+     	       type boolean;
+     	       
+     	       default false;
+     	    	 
+     	    	 config false;
+     	    	 
+     	    	 description
+     	    	 
+     	    	 "True indicates that the IOD for this satellite
+     	    	 
+     	    	 will soon be updated in type 1 or 9 message.";
+     	    	
+     	    }
+
+     	    leaf los-warning {
+     	    	
+     	      type boolean;
+     	    	 
+     	      default false;
+     	    	 
+     	      config false;
+     	    	 
+     	      description
+     	    	 
+     	      "Line-of-site advanced warning.  True indicates
+     	    	 
+     	      that the satellite will shortly become unhealthy.";
+     	    	
+     	    }
+  	    
+ 	      }
+    
+      }
+
+      container satellite-receiver-status-ds {
+     	
+     	  description
+     	 
+     	  "Satellite receiver status monitoring";
+     	     	
+     	  typedef satellite-receiver-status-enumeration {
+     	    	
+     	     type enumeration {
+     	    	 	
+     	       enum no-signal {
+     	    	 	 	
+     	    	   value 0;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "No signal";
+     	    	 	 	
+     	    	 }
+     	    	 	
+     	       enum low-signal {
+     	    	 	 	
+     	    	   value 1;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Low signal, unable to acquire satellites";
+     	    	 	 
+     	    	 }
+     	    	 	
+     	       enum acquiring-satellites {
+     	    	 	 	
+     	    	   value 2;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Signal adequate, acquiring satellites";
+     	    	   
+     	    	 }
+     	    	 	
+     	       enum unusable-signal {
+     	    	 	 	
+     	    	   value 3;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Signal adequate but unusable";
+     	    	   
+     	       }
+     	    	 	
+     	       enum acquiring-position {
+     	    	 	 	
+     	    	   value 4;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Signal adequate, acquiring position";
+     	    	        	    	 	 
+     	       }
+     	    	 	
+     	       enum establishing-fix {
+     	    	 	 	
+     	    	   value 5;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Signal adequate, establishing fix";
+     	    	       	    	 	 
+     	       }
+     	    	 	
+     	       enum locked {
+     	    	 	 	
+     	    	   value 6;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Code locked and time synchronized";
+     	    	 	 
+     	       }
+     	    	 	
+     	       enum locked-min {
+     	    	 	 	
+     	    	   value 7;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+               "Code and carrier locked and time synchronized, above minimum signal strength";
+     	    	 	 
+     	       }
+     	    	 	
+     	       enum locked-nominal {
+     	    	 	 	
+     	    	   value 8;
+     	    	 	 	 
+     	    	   description
+     	    	 	 	 
+     	    	   "Code and carrier locked and time synchronized, nominal signal strength";
+     	    	 	 
+     	    	 }
+     	    	 	
+     	       enum locked-strong {
+     	    	 	 	
+     	    	   value 9;
+     	    	 	 	
+     	    	   description
+     	    	 	 	 
+     	    	   "Code and carrier locked and time synchronized, strong signal strength";
+     	    	 	 
+     	       }
+     	    	 	
+     	     }
+     	    	
+     	     description
+     	    	 
+     	     "Satellite receiver status enumeration";
+     	    	
+     	  }
+     	    
+     	  leaf satellite-receiver-status {
+     	    	
+     	     type satellite-receiver-status-enumeration;
+     	    	 
+     	     default "no-signal";
+     	    	 
+     	     config false;
+     	    	 
+     	     description
+     	    	 
+     	     "Satellite receiver status";
+     	    	
+     	  }      	
+
+        list instance-list{
+					
+          key "instance-number";
+          
+          description
+          
+          "List of one or more GNSS systems seen by the satellite receiver";
+                   
+          leaf instance-number {
+        	
+          type uint8;
+        	
+          description
+        	
+        	"The List of one or more GNSS Systems seen by the satellite receiver";
+        	
+          }  
+          
+          leaf gnssid {
+        	
+          type gnssid-enumeration;
+        	   
+          default unknown;
+        	 
+          config false;
+        	 
+          description
+        	 
+        	"The System ID (constellation) of the Global Navigation Satellite System that the
+          	 
+          Satellite Receiver is targeting";
+        	
+          }          
+          
+          leaf satellite-vehicles-in-view {
+          	
+          type uint16;
+          
+          description
+          	
+          "The number of satellite vehicles of the GNSS system in view";	
+          	
+          }
+
+          leaf satellite-vehicles-in-fix {
+          	
+          type uint16;
+          	
+          description
+          
+          "The number of satellite vehicles of the GNSS System that are being
+          
+          used in the fix.";	
+          	
+          }
+          			
+				}
+     	
+      }
+ 
+      container tvp-object-ds {
+     	
+     	   description
+     	 
+     	   "Time, Velocity and Position monitoring
+     	   
+     	   Note: the data set in this version 
+     	   
+     	   only contains Position information";
+     	 
+     	   leaf latitude {
+     	   	
+     	   	 type decimal64 {
+     	   	 
+     	   	   fraction-digits 8; 
+     	   	 
+     	   	   range "-90..90";
+     	   	    	   	 
+     	     }     	   	 
+     	   	 
+     	   	 default 0;
+     	   	 
+     	   	 config false;
+     	   	 
+     	   	 description
+
+     	     "Latitude in integer and decimal fraction of a degree, +/- signifies North/South
+     	    	 
+     	     gpsd Table 1 lat.  eg. 27.98805556 degrees";     	   	      	   	 
+     	   	
+     	   }
+     	   
+     	   leaf longitude {
+     	   	
+     	   	 type decimal64 {
+     	   	 
+     	   	   fraction-digits 8; 
+     	   	 
+     	   	   range "-180..180";
+     	   	    	   	 
+     	     }     	   	 
+     	   	 
+     	   	 default 0;
+     	   	 
+     	   	 config false;
+     	   	 
+     	   	 description
+
+     	     "Longitude in integer and decimal fraction of a degree, +/- signifies East/West
+     	    	 
+     	     gpsd Table 1 lon. eg 86.92527778";     	   	      	   	 
+     	   	
+     	   }
+
+     	   leaf altitude {
+     	   	
+     	   	 type decimal64 {
+     	   	 
+     	   	   fraction-digits 2; 
+     	   	 
+     	   	   range "-1000..10000";
+     	   	    	   	 
+     	     }     	   	 
+     	   	 
+     	   	 default 0;
+     	   	 
+     	   	 config false;
+     	   	 
+     	   	 description
+
+     	     "Altitude, integer and decimal fraction above or below ellipsoid in meters
+     	    	 
+     	     gpsd Table 1 altHAE.  e.g. +8848.86";     	   	      	   	 
+     	   	
+     	   }
+ 	
+      }
+ 
+      container osc-object-ds {
+     
+         description
+      
+         "Parameters relating to the status of a
+      
+         GNSS-disciplined oscilator (GOSDO).
+      
+         The GNSS PPS output is typically used
+      
+         to discipline a local oscillator with
+      
+         better short term stability";       	    
+    
+         leaf running {
+        	
+           type boolean;
+          
+           default false;
+        
+           config false;
+        
+           description
+        
+           "True indicates that the oscillator is running.
+        
+           Note Oscillators may require warm-up at the
+        
+           start of day";
+        	
+         }
+     
+         leaf ref-pps {
+        	
+           type boolean;
+          
+           default false;
+        
+           config false;
+        
+           description
+        
+           "True indicates that the oscillator is
+        
+           receiving a GPS PPS signal"	;
+        	
+         }
+     
+         leaf disciplined {
+        	
+           type boolean;	
+          
+           default false;
+        	
+        	 config false;
+        	
+        	 description
+        	
+        	 "True indicates that the GNSS PPS is
+        	
+        	 sufficiently stable and is being used
+        	
+        	 to discpline the local oscillator";
+        	
+         }
+     
+         leaf delta-time {
+        	
+        	 type int32;
+        	 
+        	 default 0;
+        	
+        	 config false;
+        	
+        	 description
+        	 
+        	 "The time difference in nanoseconds between
+        	 
+        	 the GNSS-discplined oscillator PPS output
+        	 
+        	 pulse and the most recent GPS PPS input
+        	 
+        	 pulse. Range +/- 0.5s for a 1 PPS system
+        	 
+        	 as time of day is not included.";
+         }
+     
+      }
+ 
+      container antenna-status-ds {
+     
+         description
+     
+         "Parameters relating to status of GNSS reference clock
+     
+         and Antenna";
+     
+        typedef antenna-status-enumeration {
+       	
+          type enumeration {
+           	
+          enum not-available {
+           	 	
+             value 0;
+           	 	 
+           	 description
+           	 	 
+           	 "Not available";
+           	 	
+          }
+
+          enum normal-operation {
+             	
+             value 1;
+             	 
+             description
+             	 
+             "Normal operation";
+             	
+          }
+           	
+          enum searching {
+           	 	
+           	 value 2;
+           	 	 
+           	 description
+           	 	 
+           	 "Searching";
+           	 	
+          }
+           	
+          enum antenna-fault {
+           	 	
+           	 value 3;
+           	 	 
+           	 description
+           	 	 
+           	 "Antenna is faulty";
+           	 	
+          }
+           	
+          enum warm-boot {
+           	 	
+           	 value 4;
+           	 	
+           	 description
+           	 	 
+           	 "Warm Boot";
+           	 	
+          }
+           	
+          enum cold-boot {
+           	 	
+           	 value 5;
+           	 	 
+           	 description
+           	 	 
+           	 "Cold Boot";
+           	 	
+          }
+
+          enum antenna-power-off {
+           	 	
+           	 value 6;
+           	 	 
+           	 description
+           	 	 
+           	 "Antenna Short Circuit";
+          }
+           	
+          enum antenna-short-circuit {
+           	 	
+           	 value 7;
+           	 	 
+           	 description
+           	 	 
+           	 "Antenna Short Circuit";
+          }
+
+          enum antenna-open-circuit {
+           	 	
+           	 value 8;
+           	 	 
+           	 description
+           	 	 
+           	 "Antenna Short Circuit";
+          }
+           	
+          }
+          
+           description
+          
+           "GNSS antenna status";
+               	
+        }
+       
+         leaf antenna-status {
+       	
+       	   type antenna-status-enumeration;
+       	 
+       	   default "not-available";
+       	 
+       	   config false;
+       	 
+       	   description
+       	 
+       	   "GNSS reference clock source status";
+       	
+         }
+       
+         leaf backup-antenna-faulty {
+       	
+       	   type boolean;
+       	 
+       	   default false;
+       	 
+       	   config false;
+       	 
+       	   description
+       	 
+       	   "True indicates that the backup antenna is
+       	 
+       	   unavailable or faulty";
+       	 
+         }
+     
+     
+      }
+     
+    }
+ 
+  }
+
+
+  container ptp-smpte {
+  	
+     if-feature ptp-smpte;
+  
+     description
+  
+     "Parameters in ST 2059-2 associated with
+  
+     (a) The SMPTE PTP Communication Model
+     
+     (b) The Variance Measurement sample period,
+     
+     (c) The synthesis of SMPTE Time-of-Day Timecode from PTP
+     
+     (d) Management TLV message counters, and
+     
+     (e) Current of leader<>follower delays";    
+  
+     list instance-list{
+       	 	
+  	 	 key "instance-number";
+  	 	 
+  	 	 description
+
+       "List of one or more PTP Instances in the device.
+
+       Each PTP Instance represents a distinct instance of a PTP
+
+       implementation";
+            	 
+     	 reference
+
+       "8.1.4.2 of IEEE Std 1588-2019";       
+
+        
+       leaf instance-number {
+
+        type uint32;
+
+        description
+
+        "The instance-list is indexed using a number that is
+
+        unique per PTP Instance within the device, applicable
+
+        to the management context only";
+            	 	       	
+     	  reference
+
+        "8.1.4.2 of IEEE Std 1588-2019";
+     	 
+       }
+  
+       leaf variance-measurement-sample-period {
+    	
+    	 type uint8;
+    	 
+    	 default "0";
+    	 
+    	 config false;
+    	  	 
+    	 description
+    	 
+    	 "Variance Measurement Sample Period in integer seconds
+    	 
+    	 range 1 to 255, 0 = undefined";
+    	 
+    	 reference
+    	 
+    	 "ST 2059-2:2021 6.5.4, 7.6.3.2 of IEEE Std. 1588-2008";
+    	
+       }
+  	 	 
+  	   typedef smpte-communication-model-enumeration {
+	 	
+  	 	 type enumeration {
+  
+         enum unknown {
+         	
+         	 value 0;
+         	 
+         	 description
+         	 
+         	 "Communication model is unknown";
+         	
+         }
+  	 	 	
+  	 	 	 enum multicast {
+  	 	 	 	
+  	 	 	 	 value 1;
+  	 	 	 	
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "Multicast Announce/Sync/Follow-up,
+  	 	 	 	 
+  	 	 	 	 Multicast Delay-request/Delay-response";
+  	 	 	 	  	 	 	 	
+  	 	 	 }
+  	 	 	
+  	 	 	 enum smpte-mixed {
+  	 	 	 	
+  	 	 	 	 value 2;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "Multicast Announce/Sync/Follow-up
+  	 	 	 	 
+  	 	 	 	 Unicast Delay-request/Delay-response
+  	 	 	 	 
+  	 	 	 	 without negotiation";
+  	 	 	 	
+  	 	 	 }
+  	 	 	
+  	 	 	 enum unicast {
+  	 	 	 	
+  	 	 	 	 value 3;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "Unicast Announce/Sync/Follow-up
+  	 	 	 	 
+  	 	 	 	 Unicast Delay-request/Delay-response";
+  	 	 	 	
+  	 	 	 }
+
+  	 	 	 enum multicast-smpte-mixed {
+  	 	 	 	
+  	 	 	 	 value 4;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "Both Multicast and SMPTE-mixed communication
+  	 	 	 	 
+  	 	 	 	 modes";
+  	 	 	 	
+  	 	 	 }  	 	 	
+  	 	 	
+  	 	 	
+  	 	 }
+  	 	
+  	 	 description
+       
+       "Reporting of the SMPTE profile communication
+       
+       mode being used";
+       
+       reference
+       
+       "ST 2059-2:2021 6.10";
+  	 	 
+  	   }
+  	
+    	 leaf smpte-communication-model {
+  	 	
+  	 	 type smpte-communication-model-enumeration;
+  	 	 
+  	 	 default "unknown";
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+       
+       "Reporting of the SMPTE profile communication
+       
+       mode being used";
+       
+       reference
+       
+       "ST 2059-2:2021 6.10";  	 	 
+  	 	
+  	 	
+  	   }
+  	   	
+  	   container smpte-timecode-ds {
+  	 	
+  	 	 description
+  	 	 
+  	 	 "Data-set relating to the parameters to control
+  	 	 
+  	 	 the generation of SMPTE time of day timecode
+  	 	 
+  	 	 from PTP";
+  	 	 
+  	 	 reference
+  	 	 
+  	 	 "ST 2059-2:2021 6.12";
+  	 	 
+  	 	 
+  	 	 leaf default-system-frame-rate-numerator {
+  	 	 	
+  	 	 	 type int32;
+  	 	 	 
+  	 	 	 default 1;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The default frame rate of the slave system
+  	 	 	 
+  	 	 	 as a lowest term rational.  The data type shall
+  	 	 	 
+  	 	 	 be composed of a pair of int32 values coded in
+  	 	 	 
+  	 	 	 big-endian form.  The denominator shall be the
+  	 	 	 
+  	 	 	 smallest value that represents the frame rate
+  	 	 	 
+  	 	 	 denominator.";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf default-system-frame-rate-denominator {
+  	 	 	
+  	 	 	 type int32;
+  	 	 	 
+  	 	 	 default 1;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The default frame rate of the slave system
+  	 	 	 
+  	 	 	 as a lowest term rational.  The data type shall
+  	 	 	 
+  	 	 	 be composed of a pair of int32 values coded in
+  	 	 	 
+  	 	 	 big-endian form.  The denominator shall be the
+  	 	 	 
+  	 	 	 smallest value that represents the frame rate
+  	 	 	 
+  	 	 	 denominator."; 	 	 	
+  	 	 	
+  	 	 }
+  	 	
+  	 	 typedef master-locking-status-enumeration {
+  	 	 	
+  	 	 	 type enumeration {
+  	 	 	 	 
+  	 	 	 	 enum not-in-use {
+  	 	 	 	 	
+  	 	 	 	 	 value 0;
+  	 	 	 	 	
+  	 	 	 	 	 description
+  	 	 	 	 	
+  	 	 	 	 	 "Not in use";
+  	 	 	 	 	
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 	 enum free-run {
+  	 	 	 	 	
+  	 	 	 	 	 value 1;
+  	 	 	 	 	 
+  	 	 	 	 	 description
+  	 	 	 	 	 
+  	 	 	 	 	 "free-run, not locked to external reference";
+  	 	 	 	 	
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 	 enum cold-locking {
+  	 	 	 	 	
+  	 	 	 	 	 value 2;
+  	 	 	 	 	 
+  	 	 	 	 	 description
+  	 	 	 	 	 
+  	 	 	 	 	 "In response to a disturbance, the grandmaster
+  	 	 	 	 	 
+  	 	 	 	 	 is re-locking quickly.  In this situation,
+  	 	 	 	 	 
+  	 	 	 	 	 a rapid phase adjustment with a time discontinuity
+  	 	 	 	 	 
+  	 	 	 	 	 can be expected.";
+  	 	 	 	 	
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 	 enum warm-locking {
+  	 	 	 	 	
+  	 	 	 	 	 value 3;
+  	 	 	 	 	 
+  	 	 	 	 	 description
+  	 	 	 	 	 
+  	 	 	 	 	 "In response to a disturbance, the grandmaster
+  	 	 	 	 	 
+  	 	 	 	 	 is re-locking slowly by means of a frequency
+  	 	 	 	 	 
+  	 	 	 	 	 adjustment, with no phase discontinuity.  Time
+  	 	 	 	 	 
+  	 	 	 	 	 is maintained";
+  	 	 	 	 	 
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 	 enum locked {
+  	 	 	 	 	
+  	 	 	 	 	 value 4;
+  	 	 	 	 	 
+  	 	 	 	 	 description
+  	 	 	 	 	 
+  	 	 	 	 	 "In normal operation and stable";
+  	 	 	 	 	
+  	 	 	 	 }
+  	 	 	 	 
+  	 	 	 }
+
+  	 	 	 description
+  	 	 	 	
+  	 	 	 "master clock locking status";
+  	 	 	   	 	 	
+  	 	 }
+
+       leaf master-locking-status {
+       	
+       	 type master-locking-status-enumeration;
+       	 
+       	 default "not-in-use";
+       	 
+       	 config false;
+       	 
+  	 	 	 description
+  	 	 	 	
+  	 	 	 "This is to be used by any timecode generator to indicate
+  	 	 	 
+  	 	 	 the status of the reference clock
+  	 	 	 
+  	 	 	 from which timecode is being synthesized";       	 
+       	
+       }
+  	 	
+  	 	 leaf drop-frame-flag {
+  	 	 	
+  	 	   type boolean;
+  	 	   
+  	 	   default false;
+  	 	   
+  	 	   config false;
+  	 	   
+  	 	   description
+  	 	   
+  	 	   "True indicates Drop Frame
+  	 	   
+  	 	   False indicates Non-drop Frame";
+  	 	   
+  	 	   reference
+  	 	   
+  	 	   "ST 2059-2:2021 6.12, ST 12-1:2008 8.3.1";
+  	 	 	
+  	 	 }
+  	 	 
+  	 	 leaf color-frame-flag {
+  	 	 	
+  	 	 	 type boolean;
+  	 	 	 
+  	 	 	 default false;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "True indicates color frame flag is in-use,
+  	 	 	 
+  	 	 	 False indicates color frame flag is not-in-use";
+  	 	 	 
+  	 	 	 reference
+  	 	 	 
+  	 	 	 "ST 2059-2:2021 6.12, ST 12-1:2008 8.3.1";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf current-local-offset {
+  	 	 	
+  	 	 	 type int32;
+  	 	 	 
+  	 	 	 default 0;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "Offset in seconds of the local time from
+  	 	 	 
+  	 	 	 the grandmaster time";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf jump-seconds {
+  	 	 	
+  	 	 	 type int32;
+  	 	 	 
+  	 	 	 default 0;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The size of the next discontinuity, in seconds, of
+  	 	 	 
+  	 	 	 Local Time.  A value of zero indicates that no
+  	 	 	 
+  	 	 	 discontinuity is expected.  A positive value indicates
+  	 	 	 
+  	 	 	 that the discontinuity will cause the
+  	 	 	 
+  	 	 	 current-local-offset to increase";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf time-of-next-jump {
+  	 	 	
+  	 	 	 type uint64;
+  	 	 	 
+  	 	 	 default 0;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The value of the seconds portion of the grandmaster
+  	 	 	 
+  	 	 	 PTP time at the time that the next discontinuity of
+  	 	 	 
+  	 	 	 the current-local-offset will occur.  The discontinuity
+  	 	 	 
+  	 	 	 occurs at the start of the second indicated";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf time-of-next-jam {
+  	 	 	 
+  	 	 	 type uint64;
+  	 	 	 
+  	 	 	 default 0;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The value of the seconds portion of the PTP time
+  	 	 	 
+  	 	 	 corresponding to the next scehduled occurance of the
+  	 	 	 
+  	 	 	 Daily Jam.  If no Daily Jam is scheduled, the value
+  	 	 	 
+  	 	 	 of time-of-next-jam shall be zero";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf time-of-previous-jam {
+  	 	 	
+  	 	 	 type uint64;
+  	 	 	 
+  	 	 	 default 0;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "The value of the seconds portion of the PTP time
+  	 	 	 
+  	 	 	 corresponding to the previous occurance of the
+  	 	 	 
+  	 	 	 Daily Jam";
+  	 	 	 
+  	 	 }
+  	 	
+  	 	 leaf previous-jam-local-offset {
+  	 	 	
+  	 	 	 type int32;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	  	 	 	 
+   	 	 	 description
+  	 	 	 
+  	 	 	 "The value of current-local-offset at the time of the
+  	 	 	 
+  	 	 	 previous Daily Jam event.  If a discontinuity of Local
+  	 	 	 
+  	 	 	 Time occurs at the jam time, this parameter reflects the
+  	 	 	 
+  	 	 	 offset after the discontinuity.  The default value shall
+  	 	 	 
+  	 	 	 be the current value of current-local-offset.";
+  	 	 	 	 	 	
+  	 	 }
+  	 	
+  	 	 leaf current-daylight-saving {
+  	 	 	
+  	 	 	 type boolean;
+  	 	 	 
+  	 	 	 default false;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "True indicates daylight saving is in-effect
+  	 	 	 
+  	 	 	 False indicates daylight saving is not in-effect";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf daylight-saving-at-next-discontinuity {
+  	 	 	
+  	 	 	 type boolean;
+  	 	 	 
+  	 	 	 default false;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+  	 	 	 
+  	 	 	 "True indicates daylight saving will be in-effect at
+  	 	 	 
+  	 	 	 the next discontinuity.  False indicates daylight
+  	 	 	 
+  	 	 	 saving will not be in-effect at the next discontinuity";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf daylight-saving-at-previous-daily-jam-event {
+  	 	 	
+  	 	 	 type boolean;
+  	 	 	 
+  	 	 	 default false;
+  	 	 	 
+  	 	 	 config false;
+  	 	 	 
+  	 	 	 description
+
+  	 	 	 "True indicates daylight saving was in-effect at
+  	 	 	 
+  	 	 	 the previous discontinuity.  False indicates daylight
+  	 	 	 
+  	 	 	 saving was not in-effect at the previous discontinuity";  	 	 	 
+  	 	 	   	 	 	
+  	 	 }
+  	 	
+  	 	 typedef leap-second-jump-enumeration {
+  	 	 	
+  	 	 	 type enumeration {
+  	 	 	 	 
+  	 	 	 	 enum other {
+  	 	 	 	 	
+  	 	 	 	 	 value 0;
+  	 	 	 	 
+  	 	 	 	   description
+  	 	 	 	 
+  	 	 	 	   "Other than a change in the number of
+  	 	 	 	  
+  	 	 	 	   leap seconds";
+  	 	 	 	 
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 	 enum leap-seconds {
+  	 	 	 	 	
+  	 	 	 	 	 value 1;
+  	 	 	 	 	 
+  	 	 	 	 	 description
+  	 	 	 	 	 
+  	 	 	 	 	 "A change in the number of leap seconds";
+  	 	 	 	 	
+  	 	 	 	 }
+  	 	 	 	
+  	 	 	 }
+
+  	 	   description
+  	 	 	 	 
+  	 	   "The reason for the forthcoming discontinuity of
+  	 	 
+  	 	   current-local-offset indicated by time-of-next-jump";
+  	 	 	
+  	 	 }
+  	 	
+  	 	 leaf leap-second-jump {
+  	 	 
+  	 	   type leap-second-jump-enumeration;
+  	 	   
+  	 	   default "leap-seconds";
+  	 	   
+  	 	   config false;
+  	 	   
+  	 	   description
+  	 	 	 	 
+  	 	   "The reason for the forthcoming discontinuity of
+  	 	 
+  	 	   current-local-offset indicated by time-of-next-jump";  	 	   
+  	 	
+  	   }
+  	 	
+  	   }
+ 	
+  	   leaf management-message-tx {
+  	 	
+  	 	 type yang:zero-based-counter32;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "counter indicating the number of management messages
+  	 	 
+  	 	 that has been transmitted.  These counters are typically initialized
+  	 	 
+  	 	 on power up, will wrap, may be reset, and are discontinuous.";
+  	 	
+  	   }
+  	
+  	   leaf management-message-rx {
+  	 	
+  	 	 type yang:zero-based-counter32;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "counter indicating the number of management messages
+  	 	 
+  	 	 that has been received.  These counters are typically initialized
+  	 	 
+  	 	 on power up, will wrap, may be reset, and are discontinuous.";
+  	 	
+  	   }
+
+       leaf leader-follower-delay {
+
+       type time-interval-type;
+
+       description
+
+       "The current value of the MasterSlaveDelay.
+       
+       Annex J.2 of IEEE 1588-2019";
+
+       }
+
+       leaf follower-leader-delay {
+
+       type time-interval-type;
+
+       description
+
+       "The current value of the SlaveMasterDelay.
+       
+       Annex J.2 of IEEE 1588-2019";
+
+       }
+  	
+     }
+  	
+  }
+
+
+  container grandmaster {
+  	
+  	 if-feature grandmaster;
+  	 
+  	 description
+  	 
+  	 "Data set of parameters associated with a Grandmaster";
+  	
+  	 list gm-instance-list{
+  	 	
+  	 	 key "gm-instance-number";
+  	 	 
+  	 	 description
+
+        "List of one or more Grandmaster (GM) Instances in the device.
+
+        Each GM Instance represents a distinct instance of a GM
+
+        implementation";
+        
+       leaf gm-instance-number {
+
+        type uint8;
+
+        description
+
+        "The instance-list is indexed using a number that is
+
+        unique per GM Instance within the device, applicable
+
+        to the management context only";
+
+       }     	 	  
+  	
+  	   typedef gm-lock-state-enumeration {
+  	 	
+  	 	 type enumeration {
+  	 	 	 
+  	 	 	 enum not-in-use {
+  	 	 	 	
+  	 	 	 	 value 0;
+  	 	 	 	
+  	 	 	 	 description
+  	 	 	 	
+  	 	 	 	 "not in use";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum free-run {
+  	 	 	 	
+  	 	 	 	 value 1;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "Grandmaster is in free run";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum cold-locking {
+  	 	 	 	
+  	 	 	 	 value 2;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "In response to a disturbance, the grandmaster
+  	 	 	 	 
+  	 	 	 	 is re-locking quickly.  In this situation, a
+  	 	 	 	 
+  	 	 	 	 rapid phase adjustment with a time discontinuity
+  	 	 	 	 
+  	 	 	 	 can be expected";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum warm-locking {
+  	 	 	 	
+  	 	 	 	 value 3;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "In response to a disturbance, the grandmaster
+  	 	 	 	 
+  	 	 	 	 is re-locking slowly by means of a frequency
+  	 	 	 	 
+  	 	 	 	 adjustment, with no phase discontinuity.  Time
+  	 	 	 	 
+  	 	 	 	 continuity is maintained";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum locked {
+  	 	 	 	
+  	 	 	 	 value 4;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "In normal operation and stable";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 }
+  	 	
+  	 	 description
+  	 	 
+  	 	 "ST 2059-2:2021 TLV gmLockingStatus value";
+  	 	 
+  	 	 reference
+  	 	 
+  	 	 "ST 2059-2:2021 6.12 table 2 gmLockingStatus";
+  	 	
+  	   }
+
+       leaf gm-lock-state {
+     	
+     	  type gm-lock-state-enumeration;
+     	  
+     	  default "not-in-use";
+     	  
+     	  config false;
+     	  
+     	  description
+     	  
+     	  "ST 2059-2:2015 TLV gmLockingStatus value";
+     	  
+     	  reference
+     	  
+     	  "ST 2059-2:2015 6.12 table 2 gmLockingStatus";
+     	
+       }
+
+       typedef gnss-status-enumeration {
+     	
+     	 type enumeration {
+     		
+         enum unknown {
+         	
+         	 value 0;
+         	 
+         	 description
+         	 
+         	 "The status of the GNSS sub-system is unknown";
+         	
+         }
+
+     		 enum good {
+     		 	
+     		   value 1;
+     		 
+     		   description
+     		 
+     		   "The GNSS sub-system is reporting no alarms or warning";     		 	
+     		 	
+     		 }
+     		 
+         enum warning {
+         	
+         	 value 2;
+         	 
+         	 description
+         	 
+         	 "The GNSS sub-system is reporting a warning";
+         	
+         }
+
+         enum alarm {
+         	
+         	 value 3;
+         	 
+         	 description
+         	 
+         	 "The GNSS sub-system is reporting an alarm";
+         	
+         }
+
+       }
+     	
+     	 description
+         
+       "High level alarm status of a GNSS sub-system.
+         
+       The details of the GNSS sub-system data can be found
+         
+       in the gnss container";
+     	     	
+       }
+      
+       leaf gnss-status {
+     	
+     	  type gnss-status-enumeration;
+     	  
+     	  default "unknown";
+     	  
+     	  config false;
+     	  
+     	  description
+     	  
+     	  "The current status of the gnss sub-system";
+     	  
+       }
+  	
+       list instance-list {
+     	
+     	   key "instance-number";
+     	 
+       	 description
+
+       	 "List of one or more external reference sources.
+     	 
+       	 An external reference source can be used singly or
+     	 
+      	 in combination with any other external reference sources
+     	 
+      	 that are available to the grandmaster instance.  No assumption
+     	 
+      	 is made as to the quality or stability of an individual source";
+     	 
+     	 
+     	   leaf instance-number {
+     	 	
+     	 	 type uint8;
+     	 	 
+     	 	 description
+     	 	 
+     	 	 "The external reference source instance list is indexed
+     	 	 
+     	 	 using a number that is unique per external reference source instance 
+     	 	 
+     	 	 currently being used by the grandmaster instance.";
+     	 	     	 	
+     	   }
+
+         leaf gnss-instance-number {
+
+           type uint8;
+
+           description
+
+     	 	 "The instance number of the GNSS Instance within the device
+     	 	 
+     	 	 that is providing time and frequency to the
+     	 	 
+     	 	 gm-current-ext-reference-source";
+
+         }
+     	 	
+	
+  	     leaf gm-current-ext-reference-source {
+  	 	
+  	   	 type identityref {
+  	   	 	 base smpte-time-source-id;
+  	   	 }
+  	 	 
+  	   	 config false;
+  	 	 
+  	   	 description
+  	 	 
+  	   	 "The current reference source type currently
+  	 	 
+  	   	 selected for external source.";
+  	 	
+  	     }
+
+         typedef gm-ext-reference-source-status-enumeration {
+  	 	
+  	 	   type enumeration {
+  	 	 	
+  	 	 	 enum internal {
+  	 	 	 	
+  	 	 	 	 value 0;
+  	 	 	 	
+  	 	 	 	 description
+  	 	 	 	
+  	 	 	 	 "The GM is not using an currently using an external
+  	 	 	 	 
+  	 	 	 	 reference source to discipline the internal oscillator.";
+  	 	 	 	
+  	 	 	 }
+  	 	 	
+  	 	 	 enum ext-good {
+  	 	 	 	
+  	 	 	 	 value 1;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "The internal oscillator is locked to and is being
+  	 	 	 	 
+  	 	 	 	 disciplined by the current selected external reference source.";
+  	 	 	 }
+  	 	 	
+  	 	 	 enum ext-missing {
+  	 	 	 	
+  	 	 	 	 value 2;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "The current selected external reference source is not present.";
+  	 	 	 }
+  	 	 	
+  	 	 	 enum ext-acquiring {
+  	 	 	 	
+  	 	 	 	 value 3;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "The internal oscillator is in the process of locking to
+  	 	 	 	 
+  	 	 	 	 the current selected esternal reference source.";
+  	 	 	 }
+  	 	 	
+  	 	 	 enum ext-unable-to-use {
+  	 	 	 	
+  	 	 	 	 value 4;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "The current selected external reference source is recognised
+  	 	 	 	 
+  	 	 	 	 but the internal oscillator in unable to lock to this source
+  	 	 	 	 
+  	 	 	 	 for some reason.  The external source may be unstable or intermittent.";
+  	 	 	 }
+  	 	 	
+  	 	 	 enum ext-unknown {
+  	 	 	
+  	 	 	   value 5;
+  	 	 	  
+  	 	 	   description
+  	 	 	  
+  	 	 	   "The format of the current selected external reference source
+  	 	 	  
+  	 	 	   is unknown, and the internal oscillator is unable to lock to this
+  	 	 	  
+  	 	 	   source.";
+  	 	 	  
+  	 	 	 }
+  	 	 
+  	 	   }
+  	 	
+  	 	 description
+  	 	 
+  	 	 "Reporting of the status of the external reference
+  	 	 
+  	 	 source type that the Grandmaster is currently using
+  	 	 
+  	 	 to discipline the internal oscillator";
+  	 	
+         }
+  	 
+  	     leaf gm-current-ext-reference-source-status {
+  	 	
+  	 	   type gm-ext-reference-source-status-enumeration;
+  	 	   
+  	 	   default "internal";
+  	 	 
+  	 	   config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "The status of the current source selected for the current
+  	 	 
+  	 	 external reference source.";
+  	 	
+    	   }
+
+       } 
+      	 
+  	   leaf gm-holdover-status {
+  	 	
+  	 	 type boolean;
+  	 	 
+  	 	 default false;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "If True, the Grandmaster is in holdover";
+  	 	
+       }
+  	
+     }
+  	
+  }
+
+
+  container rfc-8173 {
+  	
+  	 if-feature rfc-8173;
+  	
+  	 description
+  	
+  	 "Data set of selected parameters from IETF RFC 8173";
+  	
+     list instance-list{
+     	
+  	 	 key "instance-number";
+  	 	 
+  	 	 description
+
+       "List of one or more PTP Instances in the device.
+
+       Each PTP Instance represents a distinct instance of a PTP
+
+       implementation";
+       
+     	 reference
+
+       "8.1.4.2 of IEEE Std 1588-2019";       
+        
+       leaf instance-number {
+
+        type uint32;
+
+        description
+
+        "The instance-list is indexed using a number that is
+
+        unique per PTP Instance within the device, applicable
+
+        to the management context only";
+     	
+     	  reference
+
+        "8.1.4.2 of IEEE Std 1588-2019";
+        
+       }     	 
+  	
+  	   leaf ptp-base-clock-port-num-of-associated-ports {
+  	 	
+  	 	 type uint32;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "This object specifies the following:
+        
+        For a master port - the number of PTP slave sessions (peers)
+        
+        associated with this PTP port.
+        
+        For a slave port - the number of masters available to this slave
+        
+        port (might or might not be peered)";
+  	 	 
+  	 	 reference
+  	 	 
+  	 	 "IETF RFC 8173 ptpbaseClockPortNumOfAssociatedPorts";
+  	 	 	 	
+  	   }
+
+       leaf ptp-base-clock-running-packets-sent {
+     	
+     	 type yang:zero-based-counter64;
+     	 
+     	 config false;
+    	
+     	 description
+     	 
+     	 "Counter indicating the total number of all unicast and multicast packets that
+     	 
+     	 have been sent out for this clock in this domain. These counters are typically initialized
+     	  
+     	 on power up, will wrap, may be reset, and are discontinuous.";
+        
+       reference
+       
+       "IETF RFC 8173 ptpbaseClockRunningPacketsSent";
+     	
+       }
+
+  	   leaf ptp-base-clock-running-packets-received {
+  	 	
+  	 	 type yang:zero-based-counter64;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "Counter indicating the total number of all unicast and multicast packets that
+  	 	 
+  	 	 have been received for this clock in this domain. These counters are typically initialized
+  	 	 
+  	 	 on power up, will wrap, may be reset, and are discontinuous.";
+  	 	 
+  	 	 reference
+  	 	 
+  	 	 "IETF RFC 8173 ptpbaseClockRunningPacketsReceived";
+  	 	
+  	   }
+  	 
+  	   leaf ptp-base-clock-port-associate-in-errors {
+  	 	
+  	 	 type yang:zero-based-counter64;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "Counter indicating the number of input errored packets associated
+  	 	 
+  	 	 with the peer port. These counters are typically initialized
+  	 	 
+  	 	 on power up, will wrap, may be reset, and are discontinuous.";
+  	 	
+  	   }
+  	 
+  	   leaf ptp-base-clock-port-associate-out-errors {
+  	 	
+  	 	 type yang:zero-based-counter64;
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 
+  	 	 "Counter indicating the number of output errored packets associated
+  	 	 
+  	 	 with the peer port. These counters are typically initialized
+  	 	 
+  	 	 on power up, will wrap, may be reset, and are discontinuous.";
+  	 	
+  	   }
+  	 
+  	   typedef ptp-clock-profile-type-enumeration {
+  	 	
+  	 	 type enumeration {
+  	 	 
+  	 	   enum default-profile {
+  	 	 	
+  	 	 	   value 1;
+  	 	 	 
+  	 	 	   description
+  	 	 	 
+  	 	 	   "default";
+  	 	 	  
+  	 	 	   reference
+  	 	 	  
+  	 	 	   "IETF RFC 8173 PtpClockProfileType";
+  	 	 	 
+  	 	   }
+  	 	 
+  	 	   enum telecom {
+  	 	 	
+  	 	 	   value 2;
+  	 	 	 
+  	 	 	   description
+  	 	 	  
+  	 	 	   "telecom";
+
+  	 	 	   reference
+  	 	 	  
+  	 	 	   "IETF RFC 8173 PtpClockProfileType";
+  	 	 	
+  	 	   }
+  	 	 
+  	 	   enum vendor-specific {
+  	 	 	
+  	 	 	   value 3;
+  	 	 	 
+  	 	 	   description
+  	 	 	 
+  	 	 	   "vendor specific";
+
+  	 	 	   reference
+  	 	 	  
+  	 	 	   "IETF RFC 8173 PtpClockProfileType";  	 	 	
+  	 	 	
+  	 	   }
+  	 	 
+  	 	   enum st-2059-2-2015 {
+  	 	 	
+  	 	 	   value 4;
+  	 	 	 
+  	 	 	   description
+  	 	 	 
+  	 	 	   "SMPTE ST 2059-2:2015";
+  	 	 	  	 	 	
+  	 	   }
+  	 	 
+  	 	   enum aes67-media-profile {
+  	 	 	
+  	 	 	   value 5;
+  	 	 	 
+  	 	 	   description
+  	 	 	 
+  	 	 	   "AES67-2018 Media Profile";
+  	 	 	 
+  	 	 	   reference
+  	 	 	 
+  	 	 	   "AES67-2018 Annex A";
+  	 	 	
+  	 	   }
+  	 	 
+  	   }
+  	 	 
+
+  	 description
+  	 	 	 
+  	 "Clock Profile used. A profile is the set of allowed PTP
+
+     features applicable to a device.";
+  	 	 	 
+  	 reference
+  	 	 	 
+  	 "Sections 3.1.30 (profile) and 19.3 (PTP
+         
+     profiles) of IEEE-1588-2008";
+  	 	
+  	 	
+  	   }
+
+       leaf ptp-clock-profile-type {
+     	
+     	 type ptp-clock-profile-type-enumeration;
+     	 
+     	 default "default-profile";
+     	 
+     	 config false;
+     	 
+     	 description
+     	 
+  	 	 "Clock Profile used. A profile is the set of allowed PTP
+
+       features applicable to a device.";
+  	 	 	 
+  	 	 reference
+  	 	 	 
+  	 	 "Sections 3.1.30 (profile) and 19.3 (PTP
+         
+       profiles) of IEEE-1588-2008.";     	 
+     	
+       }
+  	 
+  	   typedef ptp-clock-state-enumeration {
+  	 	
+  	 	 type enumeration {
+  	 	 	 
+  	 	 	 enum freerun {
+  	 	 	 	
+  	 	 	 	 value 1;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "freerun";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum holdover {
+  	 	 	 	
+  	 	 	 	 value 2;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "holdover (was locked but has lost lock)";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum acquiring {
+  	 	 	 	
+  	 	 	 	 value 3;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "acquiring lock";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum frequency-locked {
+  	 	 	 	
+  	 	 	 	 value 4;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "frequency locked";
+  	 	 	 	
+  	 	 	 }
+  	 	 	 
+  	 	 	 enum phase-aligned {
+  	 	 	 	
+  	 	 	 	 value 5;
+  	 	 	 	 
+  	 	 	 	 description
+  	 	 	 	 
+  	 	 	 	 "phase locked and phase aligned";
+  	 	 	 	
+  	 	 	 }	 	 	
+  	 	 	
+  	 	 }
+
+  	 	 description
+  	 	 	 
+  	 	 "The clock state returned by a PTP engine.";
+  	 	
+  	   }
+  	
+  	   leaf ptp-clock-state {
+  	 	
+  	 	 type ptp-clock-state-enumeration;
+  	 	 
+  	 	 default "freerun";
+  	 	 
+  	 	 config false;
+  	 	 
+  	 	 description
+  	 	 	 
+  	 	 "The clock state returned by a PTP engine.";  	 	 
+  	 	
+  	   }
+  	
+     }
+  	
+  }
+
+
+}
