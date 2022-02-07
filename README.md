@@ -1,7 +1,7 @@
 # General
 This repository is public.
 
-Please consult CONTRIBUTING.md, CONFIDENTIALITY.md, LICENSE.md and PATENTS.md for important notices.
+Please consult [ContributorLicenseAgreement.md](https://github.com/SMPTE/rp2059-15/blob/main/ContributorLicenseAgreement.md), [CONFIDENTIALITY.md](https://github.com/SMPTE/rp2059-15/blob/main/CONFIDENTIALITY.md), [PatentNotice.md](https://github.com/SMPTE/rp2059-15/blob/main/PatentNotice.md) and [CopyrightNotice.md](https://github.com/SMPTE/rp2059-15/blob/main/CopyrightNotice.md) for important notices.
 
 # RP 2059-15
 Public CD of SMPTE RP 2059-15
