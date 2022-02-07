@@ -1,3 +1,8 @@
+# General
+This repository is public.
+
+Please consult CONTRIBUTING.md, CONFIDENTIALITY.md, LICENSE.md and PATENTS.md for important notices.
+
 # RP 2059-15
 Public CD of SMPTE RP 2059-15
 
