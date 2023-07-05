@@ -1,17 +1,12 @@
-# General
-This repository is public.
+# RP 2059-15 
 
-Please consult [ContributorLicenseAgreement.md](https://github.com/SMPTE/rp2059-15/blob/main/ContributorLicenseAgreement.md), [CONFIDENTIALITY.md](https://github.com/SMPTE/rp2059-15/blob/main/CONFIDENTIALITY.md), [PatentNotice.md](https://github.com/SMPTE/rp2059-15/blob/main/PatentNotice.md) and [CopyrightNotice.md](https://github.com/SMPTE/rp2059-15/blob/main/CopyrightNotice.md) for important notices.
+_This repository is public._ 
 
-# RP 2059-15
-Public CD of SMPTE RP 2059-15
+Please consult [CONTRIBUTING.md](./CONTRIBUTING.md), [CONFIDENTIALITY.md](./CONFIDENTIALITY.md), [LICENSE.md](./LICENSE.md) and [PATENTS.md](./PATENTS.md) for important notices.
 
-Public Committee Draft 2 was approved and posted to GitHub on November 12 2021
+## Reporting issues
 
-[GitHub issues](https://github.com/SMPTE/rp2059-15/issues) are preferred for discussion of this specification. Alternatively, comments can be sent to 32nf-chair@smpte.org.
+Issues should be reported at <https://github.com/SMPTE/rp2059-15/issues>. Alternatively, comments can be sent to 32nf-chair@smpte.org.
 
-A questionnaire on the proposed model is available [here](https://www.surveymonkey.com/r/29GGT87). Feedback is encouraged and welcomed.
+## Project details
 
-A Webcast presenting the RP 2059-15 project, goals and development process is available [here](https://www.smpte.org/webcast/rp-2059-15-unify-monitoring-smpte-st-2059-2-ptp-network-devices).
-
-This material is work under development and shall not be referred to as a SMPTE Standard, Recommended Practice, or Engineering Guideline. It is distributed for review and comment; distribution does not constitute publication.
